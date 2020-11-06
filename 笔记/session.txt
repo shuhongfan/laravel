@@ -1,0 +1,39 @@
+﻿1.session概念
+      session 就是打开浏览器运行服务器上的PHP程序到关掉浏览器之间的一个周期；            
+      session存储在服务器上，可以用于不同页面之间交互信息，可以看成是全局变量；           
+      session可以保存在数据库表中，还可以保存在文件中。
+      session默认存放到文件中，位置：storage\framework\sessions文件夹。
+
+2.框架封装门面： Illuminate\Support\Facades\Session,
+   在config\app.php alias中已经定义了别名，因此可以接使用use Session。
+
+3.session的操作
+    Session中存储一个变量：Session::put('key','value');
+    Session中存储多个变量：session(['key1'=>'value1','key2'=>'value2',...]);
+    Session中获取一个变量：$value = Session::get('key');
+    Session中获取一个变量或返回一个默认值(不存在session时)：
+                                           $value = Session::get('key','default');
+    Session默认值还可以来自一个匿名函数：    
+                                           $value = Session::get('key',function(){ return 'default';});
+    获取全部Session变量：Session::all();
+    检查Session变量是否存在：Session::has('users');
+    Session中删除一个变量：Session::forget('key');
+    Session中删除所有的变量：Session::flush();
+    Session在视图中使用{{Session::get('key')}}
+
+4.session的配置，config/session.php 
+    return [
+	'driver' => env('SESSION_DRIVER', 'file'),
+	'lifetime' => 120,
+	'expire_on_close' => false,
+	'encrypt' => false,
+	'files' => storage_path('framework/sessions'),
+	'connection' => null,
+	'table' => 'sessions',
+	'lottery' => [2, 100],
+	'cookie' => 'laravel_session',
+	'path' => '/',
+	'domain' => null,
+	'secure' => false,
+    ];
+

@@ -1,0 +1,23 @@
+﻿delete() ：删除记录
+删除，用修改代替删除
+物理删除（删除） 逻辑删除（本质是修改）
+Truncate()：删除表
+statement() ：原生态增删改
+select()：原生态查
+
+1. delete()删除记录，不带条件删除全部记录
+    返回值：删除记录的个数
+        $db = DB::table('表名');
+        $rst = $db->delete(); 
+
+2.delete()删除记录，带条件，删除符合条件的记录
+   where orWhere和以前用法相同
+        $db = DB::table('表名');
+        $rst = $db->where(条件)->delete();   
+
+3.truncate()删除全部记录，返回null
+        $db = DB::table('表名');
+        $rst = $db->truncate();   
+
+4.逻辑删除，使用某个字段来控制记录是否显示出来。本质是修改
+

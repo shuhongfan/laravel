@@ -1,0 +1,6 @@
+﻿引入外部文件,比如css js 图片 等等 外部文件放置到public文件夹下面
+<link rel=""  ...  href="/css/abc.css">改为：???
+<link rel=""  ...  href="{{asset('css')}}/abc.css">  asset可以是多级目录
+<link rel = "stylesheet"  type="text/css" href = "/admin/static/h-ui/css/css.css"  />
+
+ctrl+r批量替换

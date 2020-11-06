@@ -1,0 +1,67 @@
+﻿
+0.配置虚拟主机
+  域名: e:\shipin\public  shipin.com
+  host
+  127.0.0.1   shipin.com
+
+1. 数据库配置
+   .env配置
+  DB_CONNECTION=mysql
+  DB_HOST=127.0.0.1 
+  DB_PORT=3306 
+  DB_DATABASE=db_bofang
+  DB_USERNAME=root
+  DB_PASSWORD=root  
+  设置config/database.php 下面的 prefix = 'tb_' 
+
+2. 目录设置
+  ?在 shipin/app文件夹下面再创建两个文件夹Home和Admin。前台和后台   
+  ?分别放置两个文件 User.php 和 User.php 这两个文件的名字空间要修改一下。
+  
+
+  控制器按照目录来管理 大驼峰命名例如： RogotPasswodController.php
+  创建控制器：
+  php artisan make:controller Home/BofangController
+  php artisan make:controller Admin/ManagerController
+  此时自动创建了两个控制器。
+  创建两个模型:php artisan make:model admin/user
+  (先执行 composer require sven/artisan-view 这样下面的命令才可以使用)
+laravel框架 本没有生成view的命令。我们首先下载一个，通过composer。
+
+composer require sven/artisan-view
+
+安装完成后到 config/app.php 中注册服务提供者 ArtisanViewServiceProvider 到 providers 数组：
+
+1
+2
+3
+4
+5
+// config/app.php
+'providers' => [
+    ...
+    Sven\ArtisanView\ArtisanViewServiceProvider::class,
+];
+使用
+如果你现在运行 php artisan 会发现多出如下两个命令，分别用于创建和删除视图文件：
+
+make:view
+scrap:view
+创建视图
+//在视图根目录'views'下创建'index.blade.php'视图文件
+$ php artisan make:view index
+
+//在子目录'pages’下创建'index.blade.php'视图文件
+$ php artisan make:view pages.index
+
+//在自定义目录(相对于系统根目录)下创建视图文件
+
+
+  创建视图：php artisan make:view admin.login
+
+
+3. 后台登录页面
+  因为要使用验证码，先安装验证码。
+
+
+4. 

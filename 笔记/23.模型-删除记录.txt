@@ -1,0 +1,41 @@
+﻿通过模型删除记录
+1.查找记录，删除记录
+    路由：
+    Route::get('/home/del1','Home\ManageController@del1');
+    控制器：
+    public function del1(){
+        $m =  Tb_info::find(6);
+        $bool = $m->delete();
+        dd($bool);
+    }
+
+2.通过主键删除，
+    路由：
+    Route::get('/home/del2/{id}','Home\ManageController@del2');
+    控制器：
+    public function del2($id){
+        $m =  Tb_info::find($id);
+        $bool = $m->delete();
+        dd($bool);
+    }
+
+3.删除多条记录
+   路由：
+   Route::get('/home/del3','Home\ManageController@del3');
+   控制器：
+    public function del3(){
+        //$num = Tb_info::destroy(1,2,3);  //不要使用delete(1,2,3),delete不能用于静态的
+        $num = Tb_info::destroy([1,2,3]);
+        dd($num);
+    }
+
+4. 增加条件的删除操作
+    路由：
+    Route::get('/home/del4','Home\ManageController@del4');
+    控制器：
+    public function del4(){
+        $num = Tb_info::where('id','>','4')->delete();
+        dd($num);
+    }
+
+5.一般不要删除记录，可以使用软删除，可以恢复被删除的记录

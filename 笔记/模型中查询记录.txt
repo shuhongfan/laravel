@@ -1,0 +1,42 @@
+﻿	public function select1(){
+		$data = Member::find(4);
+		dd($data);
+	}
+
+	public function select1(){
+		$data = Member::find(4)->toArray(); //数组形式
+		dd($data);
+	}
+
+	public function select1(){
+		//$data = Member::find(4)->toArray();
+		$data = Member::where('id','>','4')->first()->toArray();
+		dd($data);
+	}
+	public function select1(){
+		//$data = Member::find(4)->toArray();
+		$data = Member::all()->toArray();
+		dd($data);
+	}
+	public function select1(){
+		//$data = Member::find(4)->toArray();
+		$data = Member::all('name','age','email')->toArray();
+		dd($data);
+	}
+all()中间不能有任何方法
+get()可以使用where等辅助方法等
+	public function select1(){
+		//$data = Member::find(4)->toArray();
+		$data = Member::where('id','>','2')->select('age','email')->get()->toArray();
+		dd($data);
+	}
+
+
+
+
+
+
+
+
+
+

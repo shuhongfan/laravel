@@ -1,0 +1,53 @@
+bool  is_array():判断是否是数组
+bool  isset()：判断变量是否存在
+void  unset()：删除变量
+float  ceil()：进一法取整
+float  floor()：舍去法取整
+float  round()：四舍五入取整
+rand()：随机函数
+bool checkdate():检测日期合法性
+array getdate():以数组的形式返回当前日期和时间
+string date():将整型数转换为字符串格式
+int time():时间戳
+
+array array():创建数组
+int array_unshift():数组头部插入一个或多个元素
+int array_push()：数组尾部插入一个或者多个元素
+mixed array_shift():数组头部删除一个元素，返回值，没有键
+mixed array_pop():删除最后一个元素，返回值，没有键
+array list()：遍历数组
+
+bool sort()：排序
+bool ksort()：键排序
+mixed array_rand():随机获取数组元素
+==============================================
+array array_combine():联合数组，一个作为键，一个作为值
+array array_merge():合并数组
+array array_slice():拆分数组
+array  array_aplice():替换数组
+
+int strlen():求字符串长度
+string  trim():去掉两边不可见字符或指定字符
+string  ltrim():去掉左边不可见字符或指定字符
+string  rtrim():去掉右边不可见字符或者指定字符
+mixed strpos(): 查找字符串首次出现
+string implode():数组变字符串
+array explode():字符串变数组
+string substr():取子串
+
+
+自定义函数
+变量的作用域
+
+常用正则表达式：
+https://www.cnblogs.com/vania/p/4422083.html
+
+
+答疑！
+
+
+
+
+
+
+

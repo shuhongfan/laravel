@@ -1,0 +1,145 @@
+﻿CSFR攻击
+跨站请求伪造 Cross-site forgery
+请求者可能是另一个网站。这样不安全，可以在表单中添加，是很长的一个字符串
+<input type="hidden" name="_token" value="<?php echo csrf_token();?>">
+csrf_token()是全局函数
+====================
+路由：
+Route::get('/home/test/test6','TestController@test6');
+
+Route::post('/home/test/test7','TestController@test7');
+
+控制器：
+	public function test6(){
+		return view('home.test.test6');
+	}
+	public function test7(){
+		return '请求提交成功';
+	}
+
+视图：
+<html5>
+    <form action="{{route('test7')}}" method="post" name="form1" id="form1">
+    姓名<input type="text" name="name" placeholder="请输入姓名">
+    <input type="submit" name="bt1" value="提交">
+    </form>
+</html5>
+运行：http://local.la58.com/home/test/test6
+跳到http://local.la58.com/home/test/test7
+显示错误信息：TokenMismatchException in VerifyCsrfToken.php line 68:
+说明不能进行跨站提交
+现在加入下面代码：
+<input type="hidden" name="_token" value="<?php echo csrf_token();?>">
+全部代码为：
+<html5>
+    <form action="{{route('test7')}}" method="post" name="form1" id="form1">
+    姓名<input type="text" name="name" placeholder="请输入姓名">
+    <input type="hidden" name="_token" value="{{csrf_token()}}">
+    <input type="submit" name="bt1" value="提交">
+</form>
+</html5>
+
+简写方法：
+{{csrf_field()}}
+
+<html5>
+    <form action="{{route('test7')}}" method="post" name="form1" id="form1">
+    姓名<input type="text" name="name" placeholder="请输入姓名">
+    {{csrf_field()}}
+    <input type="submit" name="bt1" value="提交">
+</form>
+</html5>
+
+===================
+从CSRF验证中排除例外路由,也就是不需要csrf验证的路由
+支持允许一些路由，屏蔽一些路由
+app/middleware/verifycsrftoken.php 写$except
+    protected $except = [
+        //该处写需要排除csrf的验证的路由
+        'home/test/test7',
+        'home/test/test8'
+    ];
+
+这样在test7和test8中提交表单的时候就不需要添加 csrf验证了。
+
+也可以写成‘*’
+    protected $except = [
+        //该处写需要排除csrf的验证的路由
+        ‘*’，	
+    ];
+排除所有的路由，这样比较危险
+---------------
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

@@ -1,0 +1,125 @@
+Laravel 简洁优雅的PHP Web开发框架
+具有富于表达性且简洁的语法
+易于理解且强大的，它提供了很多强大的工具用以开发大型的、健壮的应用。
+具有验证、路由、Session、缓存、数据库迁移等工具。
+官网：
+中文社区：
+中文官网：
+广告语：为Web艺术家创建的PHP框架
+MVC思想：模型、视图、控制器。分层思想，协同开发，后期维护方便
+ORM操作数据库：Object Relation Model
+
+开发配置与要求：重要
+Laravel框架的运行对环境有严格的要求。
+
+PHP版本>=5.6.4（建议7.0以上版本）
+PHP扩展：OpenSSL
+PHP扩展：PDO
+PHP扩展：Mbstring
+PHP扩展：Tokenizer
+
+php.ini文件的配置需要打开这些扩展，去掉前面的分号
+extendsion=php_openssl.dll
+extendsion=php_pdo_mysql.dll
+extendsion=php_mbstring.dll
+extendsion=php_fileinfo.dll(验证码)
+extendsion=php_curl.dll（主要用于请求发送）
+
+httpd.conf配置文件需要开启的模块：
+loadModule deflate module modules/mod_deflate.so
+loadModule rewrite module modules/mod_rewrite.so
+
+
+
+安装Laravel
+Laravel使用Composer管理依赖
+
+安装好之后需要将php.exe位置添加到环境变量中
+如果之前加过别的版本号，则要删除掉
+PHP -v看版本号
+
+环境变量的设置
+我的电脑 属性 高级系统设置 环境变量 系统环境变量 path 编辑 确定
+类似C:\phpStudy\PHPTutorial\php\php-7.0.12-nts
+
+Composer：音乐指挥者，用来管理依赖关系的工具
+为PHP项目准备的软件管家
+packagist.org 应用市场 通过composer应用到应用项目
+下载composer
+https://getcomposer.org
+使用windows Installer安装方便一些
+下载之后 运行composer-setup.exe
+安装的过程，Chooser the command-line PHP you want to use 
+安装的PHP位置，环境变量
+proxy settings 不要代理，翻墙 不需要填写
+
+安装完成后 在cmd下运行 composer会显示composer
+如果不能显示 可能是环境变量设置出错了
+
+使用composer部署laravel项目
+第一步切换镜像
+https://pkg.phpcomposer.com
+方法有两种：
+方法1：修改composer 的全局配置文件（推荐方式）
+打开命令行窗口(windows用户)或者(Linux Mac用户)并执行下面代码
+composer config -g repo.packagist composer https://packagist.phpcomposer.com
+方法2：不介绍
+
+部署composer项目
+将工作目录切换到项目目录(c://webxm) 可以在里面再新建几个目录
+执行：
+composer create-project laravel/Laravel --prefer-dist ./
+composer create-project laravel/Laravel --prefer-dist ./la1
+命令解释：
+composer:表示执行composer程序
+create-project：表示创建项目
+laravel/Laravel:要创建的项目的名称
+--prefer-dist：优先下载压缩包方式，而不是直接从github上下载源码（克隆）
+./:表示创建项目目录名称
+执行上面的代码 自动下载laravel到目录 ./ 或者 ./la1
+版本问题
+如果不指定版本号，则指定最新的版本
+指定版本号
+composer create-project laravel/Laravel=5.6.* --prefer-dist ./la2
+最好不要用最新的版本
+
+
+
+====================
+
+3.配置虚拟主机
+   local.lavarel.com  对应到public文件夹
+
+4.设置环境变量，注意位置和版本有关系 php所在的目录，系统环境变量
+------------------------
+5.安装
+  下载laravel5.4，解压到根目录c:\laravel文件夹
+6.修改配置虚拟主机目录配置到public文件夹
+   修改host文件
+   运行http://local.laravel.com
+
+==================
+7.安装composer
+  以后安装laravel插件更方便
+  复制离线包（composer.phar）到php.exe同级目录
+  进入php所在目录：
+  命令行执行语句
+  echo @php "%~dp0composer.phar" %*>composer.bat
+
+  再执行composer，看到composer文字表示安装好了
+
+8.配置镜像 镜像网址： https://packagist.phpcomposer.com
+   composer config -g repo.packagist composer https://packagist.phpcomposer.com
+  没显示错误信息，表示配置成功！
+
+9.composer.json用于安装文件列表，用于laravel安装软件包
+  https://packagist.org网站，里面包含一些，可以在laravel中可以使用的软件包
+
+=========================================== 
+  
+
+
+
+
+
+

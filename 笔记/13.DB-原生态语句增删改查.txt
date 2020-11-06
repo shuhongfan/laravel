@@ -1,0 +1,137 @@
+﻿   use DB;
+   statement()用于增删改
+1.DB::statement('增删改语句')，用于增加记录
+   $rst = DB::statement("insert into 表名(字段列表) values(值列表) ");
+   dd($rst);  
+    
+    路由代码：
+    Route::get('/admin/statement1','TestController@statement1');
+    控制器代码：
+    public function statement1(){
+        $rst = DB::statement("insert into tb_info(`name`,`sex`,`banji`,`hobby`,`yuwen`)
+ value('司马昭','男','四班','排球','99')");
+        dd($rst);
+    }
+   
+2. DB::statement('增删改语句')，用于删除表
+   $rst = DB::statement('drop table 表名');删除表
+   dd($rst)
+   路由代码：
+   Route::get('/admin/statement2','TestController@statement2');
+   控制器代码：
+    public function statement2(){
+        $rst = DB::statement('drop table tb_info');
+        dd($rst);
+    }
+
+3. DB::statement('增删改语句')，用于删除记录
+   $rst = DB::statement('delete from t...');   //      删除记录
+   dd($rst)
+   路由代码：
+   Route::get('/admin/statement3','TestController@statement3');
+   控制器代码：
+    public function statement3(){
+        $rst = DB::statement("delete from tb_info where `name` like '刘%' ");
+        dd($rst);
+    }
+
+4.DB::statement('增删改语句')，用于修改记录
+   $rst = DB::statement('update ...');
+   dd($rst);
+   路由代码：
+   Route::get('/admin/statement4','TestController@statement4');
+   控制器代码：
+    public function statement4(){
+        $rst = DB::statement("update tb_info set name='马超',sex='男' where `name`='李白'");
+        dd($rst);
+    }
+
+5.DB::statement('增删改语句')，用于查询记录
+   $rst = DB::statement('select * from tb_info');
+   dd($rst);
+   路由代码：
+   Route::get('/admin/statement5,'TestController@statement5');
+   控制器代码：
+    public function statement5(){
+        $rst = DB::statement("select * from tb_info");
+        dd($rst);
+    }
+
+
+6.$rst = DB::select('select...');
+   dd($rst)；
+   路由代码：
+   Route::get('/admin/statement6,'TestController@statement6');
+   控制器代码：
+    public function statement6(){
+        $rst = DB::select("select * from tb_info");
+        foreach($rst as $key=>$value){
+            echo $value->id."---";  //不能$value['id']
+            echo $value->name."---";
+            echo $value->sex."---";
+            echo $value->hobby."---";
+            echo $value->banji."---";
+            echo $value->yuwen."<br>";
+        }
+    }
+
+7.使用?占位符
+   $rst = DB::insert("insert ... values (?,?,?,?,?)", 数组);
+   dd($rst);
+   路由代码：
+   Route::get('/admin/statement7,'TestController@statement7');
+   控制器代码：
+    public function statement7(){
+        $rst = DB::statement("insert into tb_info(name,sex,yuwen,hobby,banji) VALUES (?,?,?,?,?)",
+            ['吕布','男','99','足球,篮球','四班']);
+        dd($rst);
+    }
+
+8.使用:占位符
+   $rst = DB::insert("insert into tb_info (字段) values (:占位符)", 数组);
+   dd($rst)；
+   路由代码：
+   Route::get('/admin/statement8,'TestController@statement8');  
+   控制器代码：
+    public function statement8(){
+        $array1 = ['张辽','男','99','足球,篮球','四班'];
+        $rst = DB::statement("insert into tb_info(name,sex,yuwen,hobby,banji)VALUES (?,?,?,?,?)",$array1);
+        dd($rst);
+    }
+
+9.插入占位符举例
+    $array1 = ['xm'=>'许褚',...];
+    $rst = DB::insert("insert into tb_info (...) values (:xm,...)", $array1);
+    路由代码：
+    Route::get('/admin/statement9,'TestController@statement9');  
+    控制器代码：
+    public function statement9(){
+        $array1 = ['xm'=>'典韦','xb'=>'男','yw'=>'99','ah'=>'足球,篮球','bj'=>'四班'];
+        $rst = DB::statement("insert into tb_info(name,sex,yuwen,hobby,banji)VALUES (:xm,:xb,:yw,:ah,:bj)",$array1);
+        dd($rst);
+    }
+
+10.删除占位符举例
+   $rst = DB::delete("delete from ...", 数组]); 
+   路由代码：
+   Route::get('/admin/statement10,'TestController@statement10');     
+   控制器代码：
+    public function statement10(){
+        $array1 = ['xm'=>'典%'];
+        $rst = DB::statement("delete from tb_info where name like :xm",$array1);
+        dd($rst);
+    }
+
+11.修改占位符举例
+   $rst = DB::update("update 表名 set name=?,sex=? where ...",数组);
+   dd($rst);
+   路由代码：
+   Route::get('/admin/statement11,'TestController@statement11');     
+   控制器代码：
+    public function statement11(){
+        $array1 = ['张辽','男','张文远'];
+        $rst = DB::statement("update tb_info set name=?,sex=? where name=?",$array1);
+        dd($rst);
+    }
+
+

@@ -1,0 +1,601 @@
+﻿php.ini
+extension=php_pdo.dll
+extension=php_pdo_firebird.dll
+extension=php_pdo_informix.dll
+extension=php_pdo_mssql.dll
+extension=php_pdo_mysql.dll
+extension=php_pdo_oci.dll
+extension=php_pdo_oci8.dll
+extension=php_pdo_odbc.dll
+extension=php_pdo_pgsql.dll
+extension=php_pdo_sqlite.dll
+
+<?php
+$dbms='mysql';     //数据库类型
+$host='localhost'; //数据库主机名
+$dbName='test';    //使用的数据库
+$user='root';      //数据库连接用户名
+$pass='';          //对应的密码
+$dsn="$dbms:host=$host;dbname=$dbName";
+
+
+try {
+    $dbh = new PDO($dsn, $user, $pass); //初始化一个PDO对象
+    echo "连接成功<br/>";
+    /*你还可以进行一次搜索操作
+    foreach ($dbh->query('SELECT * from FOO') as $row) {
+        print_r($row); //你可以用 echo($GLOBAL); 来看到这些值
+    }
+    */
+    $dbh = null;
+} catch (PDOException $e) {
+    die ("Error!: " . $e->getMessage() . "<br/>");
+}
+//默认这个不是长连接，如果需要数据库长连接，需要最后加一个参数：array(PDO::ATTR_PERSISTENT => true) 变成这样：
+$db = new PDO($dsn, $user, $pass, array(PDO::ATTR_PERSISTENT => true));
+
+?>
+
+
+//添加记录
+
+<?php  
+header('content-type:text/html;charset=utf8');  
+//连接数据库  
+$dsn="mysql:dbname=test;host=127.0.0.1";  
+//数据库的用户名  
+
+$user="root";  
+//数据库的密码  
+
+$password="123456";  
+//生成PDO对象  
+
+$object = new PDO($dsn,$user,$password);  
+//执行添加  
+
+$sql="insert into student(`name`,`sex`,`sex`) values('zhangsan','男','18')";  
+
+if($object->exec($sql)){  
+    
+echo '添加成功';  
+
+} 
+
+//删除记录
+<?php
+header("Content-type: text/html; charset=utf-8");
+
+$dbms='mysql';
+
+$dbName='goodsdb';
+
+$user='root';
+
+$pwd='root';
+
+$host='localhost';
+
+$charset = 'utf8';
+
+$dsn="$dbms:host=$host;dbname=$dbName;
+charset=$charset";
+
+try{
+    $pdo=new PDO($dsn,$user,$pwd);
+
+}
+catch(Exception $e)
+{
+    
+echo $e->getMessage();
+
+}
+ 
+//删除
+
+$sql = "delete from stu where id=?";
+//准备sql模板
+
+$stmt = $pdo->prepare($sql);
+$id = 12;
+//绑定参数
+
+$stmt->bindValue(1,$id);
+//执行预处理语句
+
+$stmt->execute();
+
+$affect_row = $stmt->rowCount();
+
+if($affect_row)
+{
+    
+echo '删除成功'.'<br>';
+}
+else
+{
+    
+echo '删除失败'.'<br>';
+}
+//释放查询结果
+
+$stmt = null;
+//关闭连接
+
+$pdo = null;
+
+
+
+$atime=5;
+$pdo=new PDO('mysql:host=127.0.0.1;dbname=test1','root','root');
+$stmt=$pdo->prepare('select * from test where atime>:atime');
+$stmt->bindParam(':atime',$atime);
+$stmt->execute();
+ 
+$stmt=$pdo->prepare('select * from test where atime>:atime');
+$stmt->bindParam(':atime',$atime);
+$stmt->execute();
+ 
+//查询单条数据
+$a=$stmt->fetch(PDO::FETCH_ASSOC);//关联数组print_r($a);
+$a=$stmt->fetch(PDO::FETCH_LAZY);//只能用于单条查询
+//PDORow Object
+//(
+//      [queryString] => select * from test where atime>:atime
+//      [id] => 7
+//      [aname] => aa
+//      [atime] => 23
+//)
+ 
+//查询多条数据
+$a=$stmt->fetchAll(PDO::FETCH_ASSOC);//关联数组
+//索引键
+$a=$stmt->fetchAll(PDO::FETCH_NUM);//索引键
+//既有索引键也有关联键
+$a=$stmt->fetchAll(PDO::FETCH_BOTH);//既有索引键也有关联键
+ 
+Array
+//(
+//    [0] => Array
+//    (
+//        [id] => 7
+//            [0] => 7
+//            [aname] => aa
+//[1] => aa
+//[atime] => 23
+//            [2] => 23
+//        )
+//
+//    [1] => Array
+//(
+//    [id] => 8
+//            [0] => 8
+//            [aname] => aa
+//[1] => aa
+//[atime] => 23
+//            [2] => 23
+//        )
+
+
+PDO一次查询一行数据
+
+<?php
+  
+require 'pdo_edu_config.php';
+
+try{
+  $pdo=new PDO($dsn,$userName,$passWord);
+  
+$sql="SELECT id,name,course,grade FROM student WHERE grade>70";
+  
+$result=$pdo->query($sql);//返回一个PDOstatement结果集对象
+  
+if($result && $result->rowCount()){//判断结果集对象是否存在,并且结果集数量是否大于0,也就是说是否存在数据
+    //
+rowCount()是结果集中的一个方法，可以返回当前结果集中的记录条数
+    
+$result->setFetchMode(PDO::FETCH_ASSOC);//设置结果集的读取方式，这里用的是关联的方式进行读取
+    
+$row=$result->fetch();//获取记录
+    
+print_r($row);
+  }
+}catch(PDOException $e){
+  
+die($e->getMessage());
+}
+
+
+
+<?php 
+$dbh = new PDO('mysql:host=localhost;dbname=access_control', 'root', '');  
+$dbh->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);  
+$dbh->exec('set names utf8');  
+/*添加*/
+//$sql = "INSERT INTO `user` SET `login`=:login AND `password`=:password";  
+$sql = "INSERT INTO `user` (`login` ,`password`)VALUES (:login, :password)"; $stmt = $dbh->prepare($sql); $stmt->execute(array(':login'=>'kevin2',':password'=>''));  
+echo $dbh->lastinsertid();  
+/*修改*/
+$sql = "UPDATE `user` SET `password`=:password WHERE `user_id`=:userId";  
+$stmt = $dbh->prepare($sql);  
+$stmt->execute(array(':userId'=>'7', ':password'=>'4607e782c4d86fd5364d7e4508bb10d9'));  
+echo $stmt->rowCount();  
+/*删除*/
+$sql = "DELETE FROM `user` WHERE `login` LIKE 'kevin_'"; //kevin%  
+$stmt = $dbh->prepare($sql);  
+$stmt->execute();  
+echo $stmt->rowCount();  
+/*查询*/
+$login = 'kevin%';  
+$sql = "SELECT * FROM `user` WHERE `login` LIKE :login";  
+$stmt = $dbh->prepare($sql);  
+$stmt->execute(array(':login'=>$login));  
+while($row = $stmt->fetch(PDO::FETCH_ASSOC)){    
+ print_r($row);  
+}  
+print_r( $stmt->fetchAll(PDO::FETCH_ASSOC));  
+?> 
+
+
+建立连接
+ 
+<?php 
+$dbh=newPDO('mysql:host=localhost;port=3306; dbname=test',$user,$pass,array( 
+PDO::ATTR_PERSISTENT=>true 
+)); 
+?> 
+ 
+捕捉错误
+<?php 
+try{ 
+$dbh=newPDO('mysql:host=localhost;dbname=test',$user,$pass); 
+  
+$dbh->setAttribute(PDO::ATTR_ERRMODE,PDO::ERRMODE_EXCEPTION); 
+  
+$dbh->exec("SET CHARACTER SET utf8"); 
+$dbh=null; //断开连接 
+}catch(PDOException$e){ 
+print"Error!:".$e->getMessage()."<br/>"; 
+die(); 
+} 
+?> 
+
+
+事务的
+<?php 
+try{ 
+$dbh->setAttribute(PDO::ATTR_ERRMODE,PDO::ERRMODE_EXCEPTION); 
+  
+$dbh->beginTransaction();//开启事务 
+$dbh->exec("insertintostaff(id,first,last)values(23,'Joe','Bloggs')"); 
+$dbh->exec("insertintosalarychange(id,amount,changedate) 
+values(23,50000,NOW())"); 
+$dbh->commit();//提交事务 
+  
+}catch(Exception$e){ 
+$dbh->rollBack();//错误回滚 
+echo"Failed:".$e->getMessage(); 
+} 
+?> 
+
+
+错误处理
+
+
+$dbh->setAttribute(PDO::ATTR_ERRMODE,PDO::ERRMODE_SILENT); //不显示错误
+$dbh->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_WARNING);//显示警告错误，并继续执行
+$dbh->setAttribute(PDO::ATTR_ERRMODE,PDO::ERRMODE_EXCEPTION);//产生致命错误，PDOException
+ 
+
+
+
+
+
+?
+
+ 
+<?php 
+try{   
+ $dbh = new PDO($dsn, $user, $password);   
+ $sql = 'Select * from city where CountryCode =:country';   
+ $dbh->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_WARNING);   
+ $stmt = $dbh->prepare($sql);   
+ $stmt->bindParam(':country', $country, PDO::PARAM_STR);   
+ $stmt->execute();   
+ while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {    
+ print $row['Name'] . "/t";   
+ }  
+}  // if there is a problem we can handle it here  
+catch (PDOException $e) {   
+ echo 'PDO Exception Caught. ';   
+ echo 'Error with the database: <br />';   
+ echo 'SQL Query: ', $sql;   
+ echo 'Error: ' . $e->getMessage();  
+}  
+?> 
+ 
+使用query
+ 
+<?php 
+$dbh->query($sql); 当$sql 中变量可以用$dbh->quote($params); //转义字符串的数据 
+  
+$sql = 'Select * from city where CountryCode ='.$dbh->quote($country);  
+foreach ($dbh->query($sql) as $row)  {   
+ print $row['Name'] . "/t";   
+ print $row['CountryCode'] . "/t";   
+ print $row['Population'] . "/n";  
+}  
+?>
+ 
+ 使用 prepare, bindParam和 execute [建议用,同时可以用添加、修改、删除]
+<?php 
+$dbh->prepare($sql); 产生了个PDOStatement对象 
+  
+PDOStatement->bindParam() 
+  
+PDOStatement->execute();//可以在这里放绑定的相应变量 
+?> 
+
+事务
+<?php  
+ try {  
+ $dbh = new PDO('mysql:host=localhost;dbname=test', 'root', '');  
+ $dbh->query('set names utf8;');  
+ $dbh->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);  
+ $dbh->beginTransaction();  
+ $dbh->exec("Insert INTO `test`.`table` (`name` ,`age`)VALUES ('mick', 22);");  
+ $dbh->exec("Insert INTO `test`.`table` (`name` ,`age`)VALUES ('lily', 29);");  
+ $dbh->exec("Insert INTO `test`.`table` (`name` ,`age`)VALUES ('susan', 21);");  
+ $dbh->commit();  
+ } catch (Exception $e) {  
+ $dbh->rollBack();  
+ echo "Failed: " . $e->getMessage();  
+ }  
+?>  
+
+
+■$row=$rs->fetchAll(PDO::FETCH_BOTH); FETCH_BOTH是默认的，可省，返回关联和索引。
+■$row=$rs->fetchAll(PDO::FETCH_ASSOC); FETCH_ASSOC参数决定返回的只有关联数组。
+■$row=$rs->fetchAll(PDO::FETCH_NUM); 返回索引数组
+■$row=$rs->fetchAll(PDO::FETCH_OBJ); 如果fetch()则返回对象，如果是fetchall(),返回由对象组成的二维数组
+
+
+
+<?php
+
+
+class Db
+{
+    
+public  $pdo;
+    
+public $insertID;
+    
+public $affectedRows;
+
+    
+public function __construct()
+    {
+
+        $dbms='mysql';     //数据库类型='mysql';     //数据库类型
+        
+$host='127.0.0.1'; //数据库主机名='localhost'; //数据库主机名
+        
+$dbName='test';    //使用的数据库='test';    //使用的数据库
+        
+$user='root';      //数据库连接用户名='root';      //数据库连接用户名
+        
+$pass='root';          //对应的密码='';          //对应的密码
+        
+$dsn = "$dbms:host=$host;dbname=$dbName";
+        
+$this->pdo = new PDO($dsn,$user,$pass,array(PDO::ATTR_PERSISTENT =>true)); //持久化连接
+    }
+
+    /**
+     * 过滤表中不存在的字段;用于update,insert方法;
+     * @param $tableName
+     * @param $data
+     * @return mixed
+     */
+    function filterTableColumn($tableName,$data)
+    {
+        $sql = "SELECT column_name FROM information_schema.`COLUMNS` WHERE table_name='{$tableName}' AND table_schema = '{$this->dbInfo['databaseName']}'";
+        $result = $this -> pdo ->query($sql);
+        $columns=$result->fetchAll(PDO::FETCH_ASSOC);
+        $fields = array();
+        foreach ($columns as $column) {
+            $fields[] = $column['column_name'];
+        }
+        //字段在对应表中不存在,则删除该字段;
+        foreach ($data as $key => $value) {
+            if (!in_array($key,$fields)) {
+                unset($data[$key]);
+            }
+        }
+        return $data;
+    }
+
+    public function query($sql)
+    {
+        $queryResult =$this -> pdo -> exec($sql); //常用于insert update 操作;同lastInsertId 一起使用;
+
+        $this -> insertID = $this -> pdo ->lastInsertId();
+        $this -> affectedRows = $queryResult;
+        return $queryResult;
+    }
+
+    function getNumRows($sql)
+    {
+        $recordSet = array();
+        $sql = strtolower($sql);
+        $fromsql = explode('from', $sql);
+        $sql = 'select count(*) as num from'.$fromsql[1];
+        $tempSql = explode('limit',$sql);
+        $sql = $tempSql[0];
+        $rsArr = $this -> pdo ->query($sql);
+        if($rsArr){
+            $recordSet = $rsArr -> fetchAll(PDO::FETCH_ASSOC);
+        }
+        return $recordSet[0]['num'];
+    }
+
+    function insertIntoOneRecord($tableName,$dataArray)
+    {
+        $fieldArray = array();
+        $valueArray = array();
+        $dataArray = $this->filterTableColumn($tableName,$dataArray);
+        foreach ($dataArray as $key => $value){
+            if($value != ''){
+                $fieldArray[] = "`".$key."`";
+                $valueArray[] = "'".addslashes($value)."'";
+            }
+        }
+
+        $sql = "INSERT INTO `".$tableName."` 
+				( ".implode(',', $fieldArray)." )
+				VALUES
+				( ".implode(',', $valueArray)." )";
+        //echo $sql;
+        $result = $this -> query($sql);
+        //echo '$result='.$result;
+        return $result;
+    }
+
+    function updateOneRecord($tableName,$dataArray,$whereArray)
+    {
+        $dataArray = $this->filterTableColumn($tableName,$dataArray);
+        $setArray = array();
+        $where = array();
+        foreach ($dataArray as $key => $value){
+
+            if(isset($value) && $value != '' ){
+                $setArray[] = "`".$key."` = '".addslashes($value)."'";
+            }
+            if ($key == 'note' && $value == null) {
+                $setArray[] = "`note` = ''";
+            }
+        }
+
+        foreach ($whereArray as $key => $value){
+            $where[]= "`".$key."` = '".addslashes($value)."'";
+        }
+
+        $sql = "UPDATE `".$tableName."` 
+				SET
+				".implode(',', $setArray)."
+				WHERE
+				".implode(' AND ', $where);
+        $result = $this->query($sql);
+        return $result;
+    }
+
+    function deleteOneRecord($tableName,$whereArray)
+    {
+        $where = array();
+        foreach ($whereArray as $key => $value){
+            $where[] ="`".$key."` = '".addslashes($value)."'";
+        }
+        $sql = "DELETE FROM `".$tableName."` 
+				WHERE
+				".implode(' AND ', $where);
+        //echo $sql;exit;
+        $result = $this->query($sql);
+        return $result;
+    }
+
+    public function getOne()
+    {
+        $result = $this->pdo->query($sql); //返回一个有结果集的对象,常用于查询;
+        if ($result) {
+            $rs = $result->fetch(PDO::FETCH_ASSOC); //获取一条数据，关联索引;
+        }
+        return $rs; 
+    }
+
+    public function doSelect($sql)
+    {
+        $result = $this->pdo->query($sql); //返回一个有结果集的对象,常用于查询;
+        if ($result) {
+            $rs = $result->fetchAll(PDO::FETCH_ASSOC); 
+        }
+        return $rs;
+    }
+}
+
+
+<?php
+/**
+ *查询操作
+ */
+//连接数据库
+require 'connect.php';
+$sql = "SELECT `staff_id`,`name`,`salary` FROM `staff` WHERE `salary`>?;";
+
+//创建预处理对象
+$stmt = $mysqli->stmt_init();
+
+if ($stmt->prepare($sql)){//预处理对象的prepare方法  检测sql语句是否正确
+//绑定参数
+    $stmt->bind_param('i',$salary);
+    $salary = 5000;
+
+    if ($stmt->execute()){var_dump($stmt->num_rows);
+        //获取结果集并放到缓存区
+        $stmt->store_result();
+        //将结果集中的列绑定到变量上
+        $stmt->bind_result($id,$name,$salary);
+        //判断结果集是否为空，不为空才遍历
+
+        if ($stmt->num_rows > 0){
+            //循环遍历结果集
+            //fetch()每次获取一条记录，指针下移
+            while ($stmt->fetch()){
+                echo '<p>id:'.$id.',姓名：'.$name.',工资：'.$salary;
+            }
+        }else{
+            die('当前表没有数据');
+        }
+    }else{//执行阶段的错误
+        die($stmt->errno.'：'.$stmt->error);
+    }
+}else{
+    //返回sql出错信息
+    die($stmt->errno.'：'.$stmt->error);
+}
+
+$stmt->close();
+$mysqli->close();
+运行实例 »
+点击 "运行实例" 按钮查看在线实例
+
+pdo的优势
+
+pdo是php数据对象，为其他数据库提供了一个统一的接口，也就是说可以操作所有的数据库，使用很方便。
+
+pdo连接数据库
+实例
+<?php
+/**
+ * pdo php数据对象， 是php操作所有数据库的抽象层，提供了一个统一的方法
+ */
+//new PDO(数据源，用户名，密码）
+//数据源：设置数据库类型，以及服务器地址，默认的数据库
+$dsn = 'mysql:host=127.0.0.1; dbname=php';
+//用户名
+$user = 'root';
+//密码
+$pass = 'root';
+//实例化pdo，创建pdo对象看，并实现数据库连接
+//语法结构try{}catch{}
+try{
+    $pdo = new PDO($dsn, $user, $pass);
+}catch(PDOException $e){ //pdoexception 数据类型  pdo异常 $e对象
+    die('connect error:'.$e->getMessage());//getMessage()获取pdo错误信息
+}
+
+//关闭连接
+//$pdo = null;
+//unset($pdo);
+

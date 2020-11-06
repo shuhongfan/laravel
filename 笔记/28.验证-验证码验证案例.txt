@@ -1,0 +1,72 @@
+﻿验证码案例：
+输入用户名、密码以及验证码，如果验证码正确则判断用户名和密码是否为liubei和123456，如果是给出欢迎信息，否则提示用户名或者密码错误。
+
+路由：
+Route::match(['get','post'],'/test1', 'TestController@test1');
+
+视图：
+<html5>
+    <form action="/test1" method="post" name="form1">
+        {{csrf_field()}}
+        用户名<input type="text" name="user"><span>{{$info1}}</span><br />
+        密码<input type="text" name="pwd"><span>{{$info2}}</span><br />
+        验证码<input type="text" name="yanzh"><img src="{{captcha_src()}}"><span>{{$info3}}</span><br />
+        <input type="submit" name="bt1" value="登录">
+    </form>
+
+控制器：
+<?php
+namespace App\Http\Controllers;
+use Illuminate\Support\Facades\Input;
+use Illuminate\Http\Request;
+use Validator;
+class TestController extends Controller
+{
+    public function test1(Request $request){
+        if (Input::method() == "GET"){
+            $info1 =  $info2 = $info3 = '';
+            return view('showform',compact('info1','info2','info3'));
+        }else{
+            $validator = Validator::make($request->all(),[
+                'user'  =>  'required|min:2|max:20',
+                'pwd'   =>  'required|min:2|max:20',
+                'yanzh' =>  'required|captcha',
+            ]);
+            if ($validator->passes()){
+                $all = $request->all();
+                $user = $all['user'];
+                $pwd = $all['pwd'];
+                if ($user == 'liubei' && $pwd == '123456'){
+                    echo "欢迎您$user";
+                }else{
+                    echo "用户名或者密码错误";
+                }
+            }else{
+                $info =$validator->messages()->toArray();
+                $info1 =  $info2 = $info3 = '';
+                if (isset($info['user']))
+                    $info1 = implode(',',$info['user']);
+                if (isset($info['pwd']))
+                    $info2 = implode(',',$info['pwd']);
+                if (isset($info['yanzh']))
+                    $info3 = implode(',',$info['yanzh']);
+                return view('showform',compact('info1','info2','info3'));
+            }
+        }
+    }
+}
+
+验证码修改：config/captcha.php
+
+错误信息修改：
+resouce/lang/en/validation.php
+
+    'attributes' => [
+        'user'  => 'yonghu ming',
+        'pwd'   => 'mima'
+    ],
+    'captcha'  => 'yanzh ma cuowu!',
+
+翻译：
+config/app.php
+    'locale' => 'en',        修改为 zh-CN

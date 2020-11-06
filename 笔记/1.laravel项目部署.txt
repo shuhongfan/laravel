@@ -1,0 +1,5 @@
+﻿1.安装phpstudy2018,切换版本，配置php.ini和httpd-conf.txt
+2.配置环境变量
+3.安装composer
+4.下载laravel5.6复制粘贴到任何地方。比如d:\lara56
+5.配置host.txt和vhost.conf.txt

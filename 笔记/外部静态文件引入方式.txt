@@ -1,0 +1,9 @@
+﻿引入 css js images 文件的方法
+最好用绝对路径
+<link rel="stylesheet" type="text/css" href="/css/app.css">  
+<link rel="stylesheet" type="text/css" href="{{asset('css/abc/def')}}/app.css"> 
+asset方法
+asset('css') 相当于域名加css  http://......./css
+两种方式都可以
+
+

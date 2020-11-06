@@ -1,0 +1,59 @@
+﻿自动验证，用于验证用户的输入，属于后端验证。主要用于表单提交验证。前端验证可以通过设置浏览器关闭。
+
+语法格式：
+$this->validate(对象,[数组键值对])；  
+数组键值对就是验证规则，
+            $this->validate($request,[
+                'user'  =>  'required|min:2|max:20',
+                'mail' =>  'required|email',
+                'age'   =>  'required|integer|min:1|max:100',
+                'riqi'  =>  'required|date'
+            ]);
+多个规则使用 | 来隔开。
+验证规则主要有：required,email,integer,numeric,min,max,ip,email,date等等。可以查看手册。
+验证通过，则往后执行，验证不通过则通过session返回错误信息。你可以把错误信息($errors，它是数组)显示在视图中。通过@foreach标签可以显示错误信息。
+
+举例：表单中有用户名、年龄、出生年月、邮箱，验证数据合法性。
+    路由：
+    Route::match(['get','post'],'/test1', 'TestController@test1');
+
+    控制器：
+namespace App\Http\Controllers;
+use Illuminate\Support\Facades\Input;  //加入
+use Illuminate\Http\Request;
+use Validator;
+
+    public function test1(Request $request){
+        if (Input::method()=='GET'){
+            return view('showform');
+        }else{
+            $rst = $this->validate($request,[
+                'user' => 'required|min:2|max:20',
+                'mail' => 'required|email',
+                'age' => 'required|integer|min:1|max:100',
+                'riqi' => 'required|date',
+            ]);
+            dump($rst);
+            echo "验证通过";
+        }
+    }
+
+   视图：
+<html5>
+    @if ($errors->any())
+        @foreach ($errors->all() as $error)
+            * {{ $error }}<br />
+        @endforeach
+    @endif
+
+    <form name="form1" action="/test1" method="post">
+        {{csrf_field()}}
+        用户名<input type="text" name="user"><br />
+        邮箱<input type="text" name="mail"><br />
+        年龄<input type="text" name="age"><br />
+        出生日期<input type="text" name="riqi"><br />
+        <input type="submit" name="bt1" value="save">
+    </form>
+</html5>
+
+ 

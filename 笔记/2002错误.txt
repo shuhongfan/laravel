@@ -1,0 +1,13 @@
+﻿解决phpStudy中 phpmyadmin #2002 无法登录 MySQL 服务器
+转载资料收集库 发布于2016-05-17 08:41:51 阅读数 10185  收藏
+展开
+一直使用APMServ做php服务器，但是换到win7下阿帕奇服务器一直无法启动，本地也没有占用80端口，无奈只能够更换服务器，经过比较发现phpstudy挺不错的。可是安装好打开mysql竟然无法登陆，一直提示#2002错误。
+
+从度娘处获知是文件配置错误，表示没有连接到数据库。经过试验有如下2种方式：
+
+1.将phpMyAdmin中的config.sample.inc.php复制成config.inc.php编辑config.inc.php文件，
+
+将$cfg[‘Servers’][$i][‘host’] = ‘localhost';
+改为$cfg[‘Servers’][$i][‘host’] = ‘127.0.0.1’;
+2.修改php配置目录中的， php.ini : mysql.default_socket = /tmp/mysql.sock
+以上方式选一即可。

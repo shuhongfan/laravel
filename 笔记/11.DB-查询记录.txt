@@ -1,0 +1,104 @@
+﻿使用DB查询数据记录
+  $db = DB::table('表名');
+1. get()获得记录   
+public function select1(){
+    echo "<pre>";
+    $db = DB::table('tb_info');
+    $data = $db->get();
+    foreach($data as $key=>$value){
+        echo $value->id."--";
+        echo $value->name."--";
+        echo $value->sex."--";
+        echo $value->hobby."--";
+        echo $value->banji."--";
+        echo $value->yuwen."<br />";
+    }
+}
+
+2.where条件
+  where('字段','运算符','值')多个where之间是且的关系
+  orWhere('字段','运算符','值')条件之间是或的关系
+  运算符是等于号的时候可以不写第二个参数
+public function select2(){
+    $db = DB::table('tb_info');
+    //$data = $db->where('yuwen','<','80')->get();
+    $data = $db->where('yuwen','80')->get();
+    dd($data);
+}
+3. where orWhere 或条件，驼峰
+public function select3(){
+    $db = DB::table('tb_info');
+//    $data = $db->where('yuwen','>','68')
+//       ->where('name','张飞')
+//       ->get();
+    $data = $db->where('yuwen','>','68')
+        ->orWhere('name','马超')
+        ->get();
+    dd($data);
+}
+4. first()查询满足条件的第一个记录，不是connection，不能foreach
+public function select4(){
+    $db = DB::table('tb_info');
+    $data = $db->where('name','>','刘备')
+        ->first();
+    dump($data);
+    foreach($data as $key=>$value){
+        dump($value);
+    }
+}
+
+5.取出具体的某个值 value('字段名')
+value,只能得到一个人的某个值
+    public function select(){    	
+    	$db = DB::table('表名');		
+    	$rst = $db->where('字段','运算符','值')->value('字段');   //
+    	dump($rst);
+    }
+public function select5(){
+    $db = DB::table('tb_info');
+    dd($db->where('name','刘备')->value('yuwen'));
+}
+6.别名  select( ‘字段 as 别名’,....) 
+public function select6(){
+    $db = DB::table('tb_info');
+    $data = $db->select('sex as xingbie','yuwen','name as xingming')->get();
+    dump($data);
+}
+7.排序：orderBy('字段','asc|desc')
+public function select7(){
+    $db = DB::table('tb_info');
+    //$data = $db->orderBy('yuwen')->get();
+    //$data = $db->orderBy('yuwen','asc')->get();
+    $data = $db->orderBy('yuwen','desc')->orderBy('name')->get();
+    dd($data);
+}
+8.分页显示：limit($pagesize)->offset($offset)  
+public function select8(){
+    $db = DB::table('tb_info');
+    $data = $db->limit(4)->offset(2)->get();
+    foreach($data as $key=>$value){
+        echo $value->id."--";
+        echo $value->name."--";
+        echo $value->sex."--";
+        echo $value->hobby."--";
+        echo $value->banji."--";
+        echo $value->yuwen."<br />";
+    }
+}
+public function select9($pageno = 1)
+{
+    $db = DB::table('tb_info');
+    $pagesize = 2;
+    $offset = ($pageno - 1) * $pagesize;
+    $data = $db->limit($pagesize)->offset($offset)->get();
+    foreach($data as $key=>$value){
+        echo $value->id."--";
+        echo $value->name."--";
+        echo $value->sex."--";
+        echo $value->hobby."--";
+        echo $value->banji."--";
+        echo $value->yuwen."<br />";
+    }
+}
+
+

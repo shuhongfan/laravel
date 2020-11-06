@@ -1,0 +1,87 @@
+﻿执行原生态语句statement()函数
+use DB;
+1.
+    public function statement1()
+    {   //用于增删改，查要使用select
+        $rst = DB::statement("insert into tb_info(`name1`,`sex`,`banji`,`hobby`,`yuwen`) values('司马昭','男','四班','排球','99') ");
+        dd($rst);  //返回true
+    }
+
+
+2.
+    public function statement2()
+    {
+         $rst = DB::statement('drop table tb_info');删除表
+         dd($rst); 
+   }
+
+3.
+    public function statement3()
+    {
+        $rst = DB::statement('delete from tb_info where `name` like "刘%"');  //删除姓刘的
+        dd($rst);
+    }
+
+4. 
+    public function statement4()
+    {
+        $rst = DB::statement('update tb_info set `name`="李白",`sex`="男" where `name`="马超"');//马超改成李白
+        dd($rst);
+    }
+
+
+5.       
+    public function statement5()
+    {
+        $rst = DB::statement('select * from tb_info');//返回true
+        dd($rst);
+   }
+
+6.
+    public function statement6()
+    {
+       $rst = DB::select('select * from tb_info');//返回记录
+       dump($rst);
+    }
+
+7.
+    public function statement7()
+    {
+        $rst = DB::insert("insert into tb_info (name,sex,yuwen,hobby,banji) 
+        values (?,?,?,?,?)", ['吕布','男',99,'足球','三班']);
+        dd($rst);
+    }
+
+8.
+    public function statement8()
+    {
+        $rst = DB::insert("insert into tb_info (name,sex,yuwen,hobby,banji) 
+        values (:xm,:xb,:yw,:ah,:bj)", 
+        ['xm'=>'典韦','xb'=>'男','yw'=>99,'ah'=>'足球','bj'=>'三班']);
+        dd($rst);
+    }
+
+9.  
+    public function statement9()
+    {
+       $array1 = ['xm'=>'许褚','xb'=>'男','yw'=>99,'ah'=>'足球','bj'=>'三班'];
+       $rst = DB::insert("insert into tb_info (name,sex,yuwen,hobby,banji) 
+       values (:xm,:xb,:yw,:ah,:bj)", $array1);
+       dd($rdt);
+    }
+
+10.
+    public function statement10()
+    {
+       $rst =DB::delete("delete from tb_info where `name` like :name",
+       ['name'=>'吕%']);  
+       dd($rst);  
+    }
+
+11.
+    public function statement11()
+    {
+        $rst = DB::update("update tb_info set name=?,sex=? where yuwen=80",
+        ['典韦','男']);
+        dd($rst);
+    }

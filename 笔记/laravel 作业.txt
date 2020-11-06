@@ -1,0 +1,676 @@
+﻿https://learnku.com/articles/6736/laravel-code-captcha
+https://blog.csdn.net/weixin_40682842/article/details/78869407
+https://www.cnblogs.com/wxy0126/p/10692524.html
+
+对环境有严格要求
+1、PHP版本 >=5.6.4
+     开启如下扩展：
+     OpenSSL:
+     PDO:
+     Mbstring:
+     Tokenizer:
+
+     数组的不同用法，类的不同用法，令牌的用法，等等高版本，新的技术需要。
+
+
+
+
+
+================================
+1. 路由
+	Route::get('user1/{id}/{name?}', function ($id,$name) {
+	    return $id.'=>'.$name;	
+	})->where(['id'=>'[0-9]+','name'=>'[A-Za-z]+']);
+     运行：
+	http://localhost/la-2/public/user1/01/zhangsan
+	显示：01=>zhangsan
+     说明：
+     	1. 加{}表示浏览器中是具体的值
+     	2.  ?表示name可选，可选的时候，最好给一个默认值，例如： 
+	3. 
+	Route::get('user1/{id}/{name?}', function ($id,$name='zhangsan') {
+    	return $id.'=>'.$name;	
+	})->where(['id'=>'[0-9]+','name'=>'[A-Za-z]+']);
+	4. ->where(['id'=>'[0-9]+','name'=>'[A-Za-z]+'])告诉程序id必须是数组，可以是多个
+                  name必须是英文字符，可以是多个。
+               5. 如果给定name值，则默认值不起作用。
+
+2.  	Route::any('aaa', function () {
+   	     return 'aaa';
+	});
+     运行：http://localhost/la-2/public/aaa
+     显示：aaa
+
+3. 
+	Route::match(['get','post'],'mutly', function () {
+	    return 'mutly';
+	});
+      运行：http://localhost/la-2/public/index.php/mutly
+          或：http://localhost/la-2/public/mutly
+      显示：mutly
+
+=======================================
+控制器：
+1.  编写控制器：
+	<?php
+	namespace App\Http\Controllers;
+	use Illuminate\Foundation\Bus\DispatchesJobs;
+	use Illuminate\Routing\Controller as BaseController;
+	use Illuminate\Foundation\Validation\ValidatesRequests;
+	use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
+	class TestController extends BaseController
+	{	
+  	    public function lst(){ 
+	         return 'zheli shi test kongzhiqi de list fangfa!';
+	    }
+	}
+    编写路由：
+	Route::get('kongzhiqi','TestController@lst');
+	表示要运行控制器TestController下的lst方法
+    运行：http://localhost/la-2/public/index.php/kongzhiqi
+    显示：zheli shi test kongzhiqi de list fangfa!
+2.    编写Test文件夹下的控制器：新建文件夹Test，在这个文件夹下新建控制器Test2
+	<?php
+	namespace App\Http\Controllers\Test;
+	use Illuminate\Foundation\Bus\DispatchesJobs;
+	use Illuminate\Routing\Controller as BaseController;
+	use Illuminate\Foundation\Validation\ValidatesRequests;
+	use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
+	class Test2Controller extends BaseController
+	{	
+  	      public function lst(){ 
+         		return '222222222';
+   	      }
+	}
+        注意：名字空间namespace App\Http\Controllers\Test;
+                  不再是：namespace App\Http\Controllers;
+       编写路由：Route::get('kongzhiqi/abc','Test\Test2Controller@lst');
+        不能写错：Route::get('kongzhiqi\abc','Test\Test2Controller@lst');  
+       也不能写成：Route::get('kongzhiqi/abc','Test/Test2Controller@lst');   
+       运行：http://localhost/la-2/public/index.php/kongzhiqi/abc
+       显示：222222222
+=============================================
+1. 视图
+视图：文件名为：D:\phpStudy\PHPTutorial\WWW\laravel54\resources\views\welcome.blade.php
+           xyz.blade.php
+1. 首先编写一个试图文件（在resource文件夹的view文件夹下）：
+    编写xyz.blade.php和welcome相同
+
+2.  编写控制器代码：Controller或TestController
+        public function showme(){ 
+	    return view('xyz');
+        }
+3. 编写路由：
+        Route::get('testview','Controller@showme' ); 
+        Route::get('testview2','TestController@showme' ); 
+4.运行：http://localhost/la-2/public/index.php/testview
+    或     http://localhost/la-2/public/index.php/testview2
+ 
+-------------------
+2.带目录的视图
+视图：Test文件夹下的xxx.blade.php 内容 111111111111
+控制器：Controller
+    public function showme2(){ 
+         return view('test.xxx');    //文件夹下的模板使用点号区分
+    }      
+路由：Route::get('testview22','Controller@showme2' ); 
+运行：http://localhost/la-2/public/index.php/testview22
+显示：111111111111
+==========================================
+视图的传参，
+方法1：关联数组     
+方法2：使用with
+
+1. 在控制器中写代码：
+    	public function showme2(){ 
+	    return view('test.xxx',['name'=>'xiaoming','age'=>'18']);
+	}
+2. 在视图中接受参数
+  模板中使用{{}}
+  {{$name}}
+  {{$age}}
+============================================
+sublime分屏
+alt+shift+1,2,3,4
+
+1.Ctrl + N，新建一个文档；
+
+2.Ctrl + Shift + P，打开命令模式，再输入 sshtml 进行模糊匹配，将语法切换到html模式；
+
+3.输入  !，再按下 Tab键或者 Ctrl + E ，就能快速打开HTML5的整体结构。
+
+
+
+二、十分常用的快捷键：
+
+Ctrl + P，打开搜索框。具体操作为：1、输入当前项目中的文件名，快速搜索文件，2、输入@和关键字，查找文件中函数名，3、输入：和数字，跳转到文件中该行代码，4、输入#和关键字，查找变量名。
+Ctrl + 回车，在当前行的下一行添加一行空行。
+Ctrl + Shift + 回车，在当前行的上一行添加一行空行。
+Ctrl + Z，撤销。
+Ctrl + Y，取消撤销。
+Ctrl + ]，或者Tab键，向右缩进。
+Ctrl + [，或者Shift +Tab，向左缩进。
+Ctrl + Shift + V，粘贴过程中保持缩进。
+Alt + F3，选中选择的词。
+
+!+tab自动生成html5模板
+
+h1+tab
+
+============================================
+模板的标签语法
+原生用法
+<?php echo $name; ?>
+
+----------------------
+使用php函数
+	<h1>原生用法</h1>
+	<?php echo $name; ?>
+	<h1>使用php函数</h1>
+	当前时间 <?php echo time(); ?>
+	<h1>使用模板标签</h1>
+	{{time()}}
+{{}}插值表达式
+----------------------
+使用遍历，比如数组，二维数组
+控制器中的二维数组
+    public function showme2(){ 
+    	$data=[
+			['name'=>'zhangsan','age'=>19],
+			['name'=>'lisi','age'=>18],
+			['name'=>'wangwu','age'=>18]
+    	];
+	    return view('test.xxx',['name'=>'aaa','data'=>$data]);
+	}
+模板中：
+	<h1>使用模板标签遍历</h1>
+	@foreach ($data as $v)
+	姓名{{$v['name']}}----年龄:{{$v['age']}}
+	<br />
+	@endforeach
+
+或者：
+	@foreach ($data as $v)
+	     @foreach ($v as $v1)
+	        {{$v1}}
+	        &nbsp
+	     @endforeach
+ 	     <br />
+	@endforeach
+=================================
+if elseif标签
+
+
+
+
+
+============================================
+中间件
+win+r  cmd
+C:\Users\Administrator>d:
+D:\>cd phpstudy
+D:\phpStudy>cd D:\phpStudy\PHPTutorial
+D:\phpStudy\PHPTutorial>cd www
+D:\phpStudy\PHPTutorial\WWW>cd la-2
+D:\phpStudy\PHPTutorial\WWW\la-2>php artisan make:middleware TestMiddleware
+Middleware created successfully.
+则自动生成中间件文件：D:\phpStudy\PHPTutorial\WWW\la-2\app\Http\Middleware.php
+里面的文件：
+
+================================
+http相应
+路由：
+Route::get('/response',function(){
+	return response('hello world',304)->header('content-type','text/html;charset=utf-8');
+});
+运行：http://localhost/la-3/public/response
+显示：hello world
+F12  F5 显示状态码304
+
+Route::get('/response/cookie',function(){
+	return response('')->withCookie('name','xiaoming',10);
+});
+
+Route::get('/cookie',function(){
+	dd(Cookie::get('name'));
+});
+
+先后运行：
+http://localhost/la-3/public/response/cookie
+http://localhost/la-3/public/cookie
+显示："xiaoming"
+表明设置生效了。
+也支持中文
+---------------------------
+json
+Ajax返回JSON数据（重点）
+给前端返回数据，而前端一般是通过Ajax来请求，然后
+return response()->json(['name'=>'zhangsan','state'=>'CA']);
+如果你要创建一个JSON相应，可是添加setCallback到json方法后面：
+return response()->json(['name'=>'zhangsan','state'=>'CA'])
+->setCallback($request->input('callback'));
+
+第一步写Ajax路由
+Route::get('/ajax',function(){
+	return view('ajax');
+});
+
+第二步
+Route::get('/response/ajax',function(){
+	return response()->json(['name'=>'xiaoqiang','age'=>20]);
+});
+
+运行：http://localhost/la-3/public/response/ajax
+显示：{"name":"xiaoqiang","age":20}
+
+上述操作也可以在控制器中
+=============================
+配置数据库
+vendor下的.env配置如下：
+DB_CONNECTION=mysql
+DB_HOST=127.0.0.1
+DB_PORT=3306
+DB_DATABASE=db_kaoshi
+DB_USERNAME=root
+DB_PASSWORD=123456
+config文件夹下database.php下配置：
+        'mysql' => [
+            'driver' => 'mysql',
+            'host' => env('DB_HOST', '127.0.0.1'),
+            'port' => env('DB_PORT', '3306'),
+            'database' => env('DB_DATABASE', 'db_kaoshi'),
+            'username' => env('DB_USERNAME', 'root'),
+            'password' => env('DB_PASSWORD', '123456'),
+            'charset' => 'utf8mb4',
+            'collation' => 'utf8mb4_unicode_ci',
+            'prefix' => env('DB_PREFIX','tb_'),
+            'strict' => true,
+            'engine' => null,
+        ],
+
+'password' => env('DB_PASSWORD', '123456')
+表示优先使用env中的DB_PASSWORD，如果没有就使用123456作为密码，其他类似
+
+=============================
+原生态的增删改查，很少使用
+Route::get('db/insert',function(){
+	$rs = DB::insert("insert into tb_user values(null,'xiaoming','123456')");
+	dd($rs);//插入成功返回true,否则返回false
+});
+//查询操作
+Route::get('db/select',function(){
+	$data = DB::select("select * from tb_user");
+	dd($data);//一维数组。每个元素是一个对象，大括号是对象
+});
+//更新操作
+Route::get('db/update',function(){
+	$row = DB::update("update tb_user set user='xiaomei' where id=123");
+	dd($row);//返回受影响的行数
+});
+//参数绑定，可以防止sql注入
+Route::get('db/selectp',funciton(){
+	$data =DB::select("select * from tb_user where id=:id",['id'=>2]);
+	dd($data);
+});
+-------------
+上述操作也可以在控制器中
+
+
+=============================
+构建器
+$info = DB::table('user');
+dd($info);
+--------------
+$data = DB::table('user')->get();
+dd($data);
+返回全部记录，返回collection对象
+--------------
+$data = DB::table('user')->first();
+dd($data);
+返回第一条记录,就是一个stdClass对象，就是第一个记录
+--------------
+$data = DB::table('user')->pluck(‘user’);
+//$data = DB::table('user')->pluck(‘pwd’);
+//$data = DB::table('user')->pluck(‘pwd’,'id');
+dd($data);
+返回一列数据,后面的参数是键名
+--------------
+where子句
+$user = DB::table('user')->where('id','=','1');
+仍然是构建器
+$user = DB::table('user')->where('id','=','1')->get();
+可以查询到记录id=1的记录
+=============================
+使用构建器完成增删改查
+
+Route::get('db/insert2',function(){
+	$rs = DB::table('user')->insert( 
+		['user'=>'lisi','pwd'=>'123456']
+	 );
+	dd($rs);//插入成功返回true,否则返回false
+});
+
+Route::get('db/insert3',function(){
+	$rs = DB::table('user')->insert([
+		['user'=>'lisi','pwd'=>'123456'],
+		['user'=>'wangwu','pwd'=>'65789'],
+		['user'=>'zhanoliu','pwd'=>'654321']
+	]);
+	dd($rs);//插入成功返回true,否则返回false
+});
+
+Route::get('db/insert4',function(){
+	$id = DB::table('user')->insertGetId(
+		['user'=>'lisi','pwd'=>'123456']
+               );
+	dd($id);//插入成功返回true,否则返回false
+});
+-------------------------
+Route::get('db/update2',function(){
+    $rs = DB::table('user')->where('id','2')->update(['user'=>'xiaomeinew']);
+   // $rs = DB::table('user')->find('id','2')->update(['user'=>'xiaomeinew']); ?
+    dd($rs);
+});
+-------------------------------
+Route::get('db/delete2',function(){
+    $rs = DB::table('user')->where('id','=','2')->delete();
+    dd($rs);
+});
+----------------------------------
+
+============================================
+============================================
+自定义模型
+1. 先配置数据库
+vendor下的.env配置如下：
+DB_CONNECTION=mysql
+DB_HOST=127.0.0.1
+DB_PORT=3306
+DB_DATABASE=db_kaoshi
+DB_USERNAME=root
+DB_PASSWORD=123456
+config文件夹下database.php下配置：
+        'mysql' => [
+            'driver' => 'mysql',
+            'host' => env('DB_HOST', '127.0.0.1'),
+            'port' => env('DB_PORT', '3306'),
+            'database' => env('DB_DATABASE', 'db_kaoshi'),
+            'username' => env('DB_USERNAME', 'root'),
+            'password' => env('DB_PASSWORD', '123456'),
+            'charset' => 'utf8mb4',
+            'collation' => 'utf8mb4_unicode_ci',
+            'prefix' => env('DB_PREFIX','tb_'),
+            'strict' => true,
+            'engine' => null,
+        ],
+
+2. 定义自定义模板
+<?php
+
+namespace App;
+
+use Illuminate\Database\Eloquent\Model;
+
+class UserModel extends Model
+{
+	protected $table        = 'user';       //真实表名
+	protected $primaryKey   = 'id';         //主键字段
+	protected $fillable     = ['user','pwd'];//可以操作的字段
+	public $timestamps      = false;         //自动创建时间 
+}
+
+3. 编写路由：
+Route::get('orm/lst', 'ORM\UserController@lst');
+
+Route::match(['get','post'],'orm/add','ORM\UserController@add');
+
+Route::match(['get','post'],'orm/edt/{id}','ORM\UserController@edt')->where('id','\d+');
+
+Route::get('orm/del/{id}','ORM\UserController@del')->where('id','\d+');
+
+4. 创建控制器并测试
+执行：php artisan make:controller ORM\UserController
+
+自动在Controller 文件夹下面新建ORM文件夹，并新建UserController.php文件
+控制器新建好了，新建4个方法：
+<?php
+namespace App\Http\Controllers\ORM;
+use Illuminate\Http\Request;
+use App\Http\Controllers\Controller;
+class UserController extends Controller
+{	public function	lst(){
+		return "User-lst";
+	}
+	public function	add(){
+		return "User-add";
+	}
+	public function	edt(){
+		return "User-edt";
+	}
+	public function	del(){
+		return "User-del";
+	}
+}
+
+
+
+=========
+laravel获取数据表中所有的字段名
+
+use Illuminate\Support\Facades\Schema;
+
+
+$columns = Schema::getColumnListing('admins');
+
+dd($columns);
+
+
+====================
+
+执行：
+D:
+cd cd D:\phpStudy\PHPTutorial\WWW\la-5
+php artisan make:controller Admin\ManagerController
+生成后台登录的控制器：Admin文件夹下的ManagerController控制器
+
+
+===============
+插入记录
+insert可以添加一个或者多个记录
+
+public function add(){
+  $db = DB:table('member');
+  $result = $db->insert([
+    'name'=>'马冬梅',
+    'age' =>18,
+    'email'=>'madongmei@qq.com'
+  ]); 
+  dd($result);
+}
+
+public function add2(){
+  $db = DB:table('member');
+  $result = $db->insert([
+   ] 'name'=>'马冬梅',
+    'age' =>18,
+    'email'=>'madongmei@qq.com'],
+   ] 'name'=>'马夏梅',
+    'age' =>19,
+    'email'=>'madongme3i@qq.com']
+  ]); 
+  dd($result);
+}
+//返回true或者false
+
+public function add2(){
+  $db = DB:table('member');
+  $result = $db->insertGetId(
+   ] 'name'=>'马冬梅',
+    'age' =>18,
+    'email'=>'madongmei@qq.com'],
+   ] ); 
+  dd($result); //返回插入记录的id，只能插入一个
+}
+//修改方法，update
+public function xiugai2(){
+  $db = DB:table('member');
+  $result = $db->where('id','=','1')->update(
+  //或者 $result = $db->where('id','1')->update( 
+    'name'=>'zhangsanfeng',
+    'age'  =>18
+   ]
+  );
+  dd($result); //返回插入记录的id，只能插入一个
+}
+返回1 表示修改成功一个记录
+public function xiugai2(){
+  $db = DB:table('member');
+  $result = $db->where('id','=','1')->increment('age',2);
+  dd($result); //返回插入记录的id，只能插入一个
+}
+
+public function chaxun1(){
+  $db = DB:table('member')；
+  $data = $db->get();
+  dd($data);
+}
+
+public function chaxun2(){
+  $db = DB:table('member')；
+  $data = $db->get();
+  // dd($data);
+  foreach($data as $key=>$value){
+    echo {$value['id']}; 
+  }
+}
+
+public function chaxun3(){
+  $db = DB:table('member')；
+  $data = $db->where('id','>','3')->get();
+  // dd($data);
+  foreach($data as $key=>$value){
+    echo {$value['id']}; 
+  }
+}
+
+public function chaxun4(){
+  $db = DB:table('member')；
+  $data = $db->where('id','>','3')->first();
+  // dd($data);
+  foreach($data as $key=>$value){
+    echo {$value['id']}; 
+  }
+}
+public function chaxun4(){
+  $db = DB:table('member')；
+  $data = $db->where('id','>','3')->value('age');
+   dd($data); 
+}
+
+public function chaxun5(){
+  $db = DB:table('member')；
+  $data = $db->where('id','>','3')->select('name as xingming','age')->get();
+   dd($data); 
+}
+
+public function chaxun6(){
+  $db = DB:table('member')；
+  $data = $db->where('id','>','3')->select('name as xingming','age')->orderby('age','asc')->get();
+   dd($data); 
+}
+
+public function chaxun7(){
+  $db = DB:table('member')；
+  $data = $db->offset(1)->limit(2)->get();
+   dd($data); 
+}
+============
+删除
+
+public function dele1(){
+  $db =  App\Flight::find(1);
+  $db->delete();
+}
+
+public function dele2($id){
+  $user = UserModel::find($id);
+  $user->delete();
+  return redirect('orm/lst');
+}
+
+===============
+模拟大量数据
+$faker = \Faker\Factory::create('zh_CN');
+for($i=0;$i<50;$i++){
+  \App'Manager::create(
+   [ 'username'=>$faker->name,  
+    'password'=>bcrypt('123456')
+  ]);
+}
+=========
+验证码下载
+https://packagist.org/packages
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

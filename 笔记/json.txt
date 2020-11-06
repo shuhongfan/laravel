@@ -1,0 +1,14 @@
+﻿    public function testarr(){
+        $a['name'] = '刘备';
+        $a['age'] = 19;
+        $a['sex'] = 'male';
+        return view('showarr',compact('a'));
+    }
+
+   <script language="JavaScript">
+    window.onload = function (){
+        var arr = <?php echo json_encode($a)?>;
+        alert(arr["age"]);
+        alert(arr.name);
+    }
+   </script>

@@ -1,0 +1,14 @@
+﻿1.frameset框架
+    <frameset rows = '160px,*' border = '0'>
+        <frame src = '/top' />
+        <frameset cols = '160px,*'>
+            <frame src = '/left' />
+            <frame src = '/main'  name='main' />
+        </frameset>
+    </frameset>
+
+2.链接写路由：
+    <a href='/tianjia' target='main'>添加记录</a><br /> 
+
+
+

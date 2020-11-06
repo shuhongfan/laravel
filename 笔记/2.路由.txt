@@ -1,0 +1,161 @@
+﻿https://laravelacademy.org/resources-download
+1. 路由的概念
+       什么是路由：将用户的请求按照事先规划的方案提交给指定的控制器或者功能函数进行处理。换言之，路由就是访问地址形式。
+       每一个网址都对应一个路由。
+       Routes/web.php就是路由配置文件。
+       路由的格式：
+       Route::请求方式(‘请求URL’,匿名函数或控制器响应方法);
+       请求方式有：get  post等等
+       例如，希望显示hello,world!
+       代码为：Route::get('/test', function () {echo "Hello,world!";});
+       运行：http://la55.com/test
+       显示：Hello,world!
+
+2. 需要访问/home地址则路由可以写成：'/home'可以写成 'home'，建议保留 /
+    Route::get('/home', function () {echo "访问地址是home";});
+    运行：http://la55.com/home
+    显示：访问地址是home
+
+3.有时候需要一个路由响应多个请求，可以使用match来匹配，指定匹配哪一些请求方式。
+   Route::match(['get','post'],'/',function(){}); 
+   三个参数，第一个参数['get','post']   匹配哪些响应方式
+                    第二个参数'/'                 指定的URL
+                    第三个参数function(){}    要执行的匿名函数
+    例如：Route::match(['get','post'],'/test2', function () {echo "测试match";});
+    运行：http://la55.com/test2
+    显示：测试match
+    post方式暂时无法举例（表单提交），后面再举例。
+
+4.有时候需要一个路由响应多个请求，可以使用any,表示任意一种请求方式。
+   Route::any('/',function(){}); 
+   三个参数，第一个参数['get','post']   匹配哪些响应方式
+                    第二个参数'/'                 指定的URL
+                    第三个参数function(){}    要执行的匿名函数
+    例如：Route::any('/test2', function () {echo "测试any";});
+    运行：http://la55.com/test2
+    显示：????,思考，看看两个test2路由的先后顺序 ，实际上是重复了，不提倡的
+    post方式暂时无法举例（表单提交），后面再举例。
+
+5. 路由参数，参数用大括号表示，参数和闭包参数对应
+   如：
+   Route::get('/testp/{id1}',function($id){
+	return "这是必选参数的路由，参数是$id";    //$id就是闭包的形参
+   });
+   运行：http://la55.com/test3出错
+   运行：http://la55.com/test3/100
+   显示：这是必选参数的路由，参数是100
+   {id1}和($id)没有必然的联系。{}里面的东西叫做占位符
+
+6.可选参数
+   Route::get('/test4/{id1?}',function($id=2){
+       return "这是可选参数的路由，参数是$id";    //$id就是闭包的形参,接受{id1}
+   });
+   {id1?} ?表示可选参数，后面必须给默认值
+   运行：http://la55.com/test4
+   显示：这是可选参数的路由，参数是2
+   运行：http://la55.com/test4/100
+   显示：这是可选参数的路由，参数是100
+
+7.多个参数
+   Route::get('/test4/aa/{aaa}/bb/{bbb}',function($cc,$dd){
+       return "这是可选参数的路由，参数是$cc,$dd";    //$id就是闭包的形参,接受{id1}
+   });
+   运行：http://la55.com/test4/aa/zhangsan/bb/100
+   显示：这是可选参数的路由，参数是zhangsan,100
+
+8. 看看问题出在哪里？
+   Route::get('/test5/aa/{aaa?}/bb/{bbb?}',function($cc=zhangsan,$dd=20){
+       return "这是可选参数的路由，参数是$cc,$dd";     
+   });
+   默认值
+ 
+
+9. 可以通过问号来传递参数，不需要路由：比如
+   Route::get('/test6',function(){
+       return $_GET['age'];
+   });
+   运行：http://la55.com/test6?age=20
+
+10.路由别名，在视图或者控制器中想使用路由，太长不方便，可以使用路由别名
+    在定义路由的时候，为路由取名字，在以后使用过程中可以使用这个名字来获得路由信息。
+    使用该路由可以写成  Route('路由名字')，就可以获取到路由。
+    Route::get('aaa/bbb/ccc/ddd/eee',function(){ echo "ok";})->name('printinfo');
+
+    Route::get('aaa/bbb/ccc/ddd/eee',function(){
+        echo "ok";
+    })->name('printinfo');
+
+    Route::get('test7',function(){
+        return Route('printinfo');
+    });
+
+11. 输出全部路由，必须进入artisan目录执行
+C:\Users\Administrator>cd\
+C:\>cd laproject
+C:\laproject>php artisan route:list
+显示：
+
+12.路由群组
+    Route::group(['prefix'=>'admin'],function(){
+        Route::get('user/{user}',function($user){
+            echo $user;
+        });
+        Route::get('name/{name}/age/{age}',function($name,$nianling){
+            echo $name;
+            echo $nianling;
+        });
+    });
+
+    http://la55.com/admin/user/zhangsan
+    显示：zhangsan
+
+    运行：http://la55.com/admin/name/zhangsan/age/20
+    显示：zhangsan20
+
+13.正则约束
+    Route::get('/testrule/{id1}',function($id){
+	return "这是参数的正则约束...";
+    })->where('id','\d+');  //参数必须是数字
+    运行：http://la55.com/testrule/aaa 出错
+    运行：http://la55.com/testrule/100 显示：这是参数的正则约束...
+    ->where('id','\d+');表示必须是数字
+    {id1}只是一个占位符
+
+
+14.
+<?php
+use Illuminate\Http\Request;
+
+
+！！！！！必须加use Illuminate\Http\Request;  如上：
+
+if ($request->isMethod('get'))
+Route::match(['get','post'],'/login',function(Request $request){
+    if ($request->isMethod('get')){
+        return view('login');
+    }elseif($request->isMethod('post')){
+        echo $request->input('user');
+        echo $request->input('password');
+    }
+})->name('login');
+
+
+视图代码：
+<html5>
+ <form action="{{route('login')}}" method="post" name="form1">
+     {{csrf_field()}}
+     用户名<input type="text" name="user" ><br>
+     密码<input type="text" name="password"><br>
+     <input type="submit" name="bt1" value="登录">
+ </form>
+</html5>
+
+或者：
+<html5>
+ <form action="/login" method="post" name="form1">
+     {{csrf_field()}}
+     用户名<input type="text" name="user" ><br>
+     密码<input type="text" name="password"><br>
+     <input type="submit" name="bt1" value="登录">
+ </form>
+</html5>

@@ -1,0 +1,34 @@
+﻿Route::get('/admin/del1', 'TestController@del1');
+Route::get('/admin/del2', 'TestController@del2');
+Route::get('/admin/del3', 'TestController@del3');
+Route::get('/admin/del4', 'TestController@del4');
+
+1.  public function del1()
+    {
+        $db = DB::table('tb_info');
+        $rst = $db->delete();  //删除全部记录
+        dd($rst);              //受影响的记录条数
+    }
+
+
+2.  public function del2()
+    {
+        $db = DB::table('tb_info');
+        $rst = $db->where('name','刘备')->delete();  //删除name为刘备的记录
+        //where和orWhere在这里也可以使用，使用方法和前面相同
+        dd($rst);              //受影响的记录条数
+    }
+
+
+3.  public function del3()
+    {
+        $db = DB::table('tb_info');
+        $rst = $db->truncate();  //删除全部记录，返回null
+        dd($rst);
+    }
+
+
+4.    public function del4()
+    {
+        //逻辑删除，通过某个字段控制显示，实际应用很少物理删除记录，逻辑删除使用更多
+    }

@@ -1,0 +1,82 @@
+﻿自动验证，用于验证用户的输入，属于后端验证。主要用于表单提交验证。前端验证可以通过设置浏览器关闭。
+
+语法格式：
+$this->validate(对象,[数组键值对])；  
+数组键值对就是验证规则，
+            $this->validate($request,[
+                'user'  =>  'required|min:2|max:20',
+                'mail' =>  'required|email',
+                'age'   =>  'required|integer|min:1|max:100',
+                'riqi'  =>  'required|date'
+            ]);
+多个规则使用 | 来隔开。
+验证规则主要有：required,email,integer,numeric,min,max,ip,email,date等等。可以查看手册。
+验证通过，则往后执行，验证不通过则通过session返回错误信息。你可以把错误信息($errors，它是数组)显示在视图中。通过@foreach标签可以显示错误信息。
+
+举例：表单中有用户名、年龄、出生年月、邮箱，验证数据合法性。
+    路由：
+    Route::match(['get','post'],'/test1', 'TestController@test1');
+
+    控制器：
+namespace App\Http\Controllers;
+use Illuminate\Support\Facades\Input;  //加入
+use Illuminate\Http\Request;
+use Validator;
+
+    public function test1(Request $request){
+        if (Input::method()=='GET'){
+            return view('showform');
+        }else{
+            $rst = $this->validate($request,[
+                'user' => 'required|min:2|max:20',
+                'mail' => 'required|email',
+                'age' => 'required|integer|min:1|max:100',
+                'riqi' => 'required|date',
+            ]);
+            dump($rst);
+            echo "验证通过";
+        }
+    }
+
+   视图：
+<html5>
+    @if ($errors->any())
+        @foreach ($errors->all() as $error)
+            * {{ $error }}<br />
+        @endforeach
+    @endif
+
+    <form name="form1" action="/test1" method="post">
+        {{csrf_field()}}
+        用户名<input type="text" name="user"><br />
+        邮箱<input type="text" name="mail"><br />
+        年龄<input type="text" name="age"><br />
+        出生日期<input type="text" name="riqi"><br />
+        <input type="submit" name="bt1" value="save">
+    </form>
+</html5>
+
+ ==================================
+一、概述：
+      把英文错误信息翻译成中文错误信息，要用到中文语言包，取代英文语言包。
+
+二、下载位置
+      http://packagist.org输入laravel-lang搜索语言包，找到语言类型是PHP的，还要下载量最大的那个：caouecs/laravel-lang，点下它打开这个包。
+
+三、找到安装命令,在当前项目的工作目录运行下面的：
+composer required caouecs/laravel-lang:~3.0
+
+四、下载的文件位置在：vendor/caouecs/laravel-lang/src文件夹，找到语言包zh-CN（文件夹）。
+
+五、复制该语言包，粘贴到系统的语言包目录，resources/lang目录
+
+六、修改config/app.php的locale配置项为需要的语言简写：
+     'locale'   =>  'zh-CN',
+     
+     至此，语言包安装，OK！可以显示错误信息为中文了。
+
+七、测试。
+
+八、有些翻译并不存在，可以自己去修改或添加。修改validation.php。
+
+

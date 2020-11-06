@@ -1,0 +1,172 @@
+﻿路由：
+//下面一样
+//Route::match(['get','post'],'/home/test/test13','ManagerController@test13');
+Route::any('/home/test/test13','ManagerController@test13');
+
+控制器：
+namespace App\Http\Controllers;
+use Illuminate\Http\Request;
+use App\Member;
+use DB;
+use Input;
+	public function test13(Request $request){
+		if($request->isMethod('get')){
+			return view('test13');
+		}elseif($request->isMethod('post')){
+			$data = $request->all();
+			dd($data);
+	}
+
+模板：
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<form action="/home/test/test13" method="post"> 可以写成 action=""
+    <p>姓名:<input type="text" name="name" value=""></p>
+    <p>年龄:<input type="text" name="age" value=""></p>
+    <p>邮箱:<input type="email" name="email" value=""></p>
+    {{csrf_field()}}
+    <input type="submit" value="提交">
+</form>
+</body>
+</html>
+上面没有验证功能
+================
+还可以使用
+Input::method方法来判断提交类型
+上面写成：
+namespace App\Http\Controllers;
+use Illuminate\Http\Request;
+use App\Member;
+use DB;
+use Illuminate\Support\Facades\Input;
+	public function test13(Request $request){
+		if(Input::method()=='GET'){
+			return view('test13');
+		}elseif(Input::method()=='POST'){
+			$data = $request->all();
+			dd($data);
+		}
+	}
+
+
+==============
+带验证功能
+
+
+
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+@if (count($errors)>0)
+   <div>
+       <ul>
+            @foreach($errors->all() as $error )
+                <li>{{$error}}</li>
+            @endforeach
+       </ul>
+   </div>
+@endif
+<form action="/home/test/test13" method="post">
+    <p>姓名:<input type="text" name="name" value=""></p>
+    <p>年龄:<input type="text" name="age" value=""></p>
+    <p>邮箱:<input type="email" name="email" value=""></p>
+    {{csrf_field()}}
+    <input type="submit" value="提交">
+</form>
+</body>
+</html>
+
+<?php
+namespace App\Http\Controllers;
+use Illuminate\Http\Request;
+use App\Member;
+use DB;
+use Illuminate\Support\Facades\Input;
+class ManagerController extends Controller
+{  
+    public function add1(){
+    	$model = new Member();
+    	$model->name = 'zhangsan';
+    	$model->age = '24';
+    	$model->email = 'zhansa@qcom';
+    	$model->avatar = '';
+    	$model->save();
+    }
+	public function select1(){
+		//$data = Member::find(4)->toArray();
+		$data = Member::where('id','>','2')->select('age','email')->get()->toArray();
+		dd($data);
+	}
+	public function update1(){
+		$model = new Member();
+		$ss = $model->where('id','>','1')->update(['age'=>'10','email'=>'123@123.com']);
+		dd($ss);
+	}
+	public function test13(Request $request){
+		if(Input::method()=='GET'){
+			return view('test13');
+		}elseif(Input::method()=='POST'){
+			$data = $request->all();
+			//基类提供的validate
+			$this->validate($request,[
+				'name'  =>   'required|min:2|max:6',
+				'age'   =>   'required|integer|min:16|max:30',
+				'email' =>   'required|email',
+			]);
+			//验证通过才会向下执行
+			dd($data);
+		}
+	}
+}
+
+//下面一样
+//Route::match(['get','post'],'/home/test/test13','ManagerController@test13');
+Route::any('/home/test/test13','ManagerController@test13');
+
+=================================
+
+数据验证翻译成中文
+https://packagist.org/   搜索laravel-lang 选择第一个
+单击第一项 阅读
+执行下面代码安装语言包
+E:\laravel54>composer require caouecs/laravel-lang:~4.0
+确保在项目根目录，不要在public目录
+
+安装完毕 文件在 vendor caouecs文件夹，选用 zh-CN
+把zh-CN复制到语言包目录
+resource/lang目录
+然后再修改配置文件
+再次运行 此时显示中文提示
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

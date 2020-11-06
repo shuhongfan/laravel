@@ -1,0 +1,23 @@
+下载composer
+https://getcomposer.org/download/
+
+1.安装sublime
+2.安装phpstudy2018,配置php.ini文件
+3.配置虚拟主机
+4.配置hosts文件
+5.设置环境变量，对应pubic文件夹
+6.安装composer
+  echo @php "%~dp0composer.phar" %*>composer.bat
+
+7.配置镜像 guonei
+
+https://pkg.phpcomposer.com
+
+8.配置镜像
+  composer config -g repo.packagist composer https://pkg.phpcomposer.com
+没有报错就表示成功
+
+9.composer安装好了，怎样使用
+   http://www.packagist.org 里面有很多软件包
+
+10.

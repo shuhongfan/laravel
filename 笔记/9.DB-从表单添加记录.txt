@@ -1,0 +1,40 @@
+﻿1.路由
+   Route::match(['post','get'],'/admin/add4', 'TestController@adddata4');
+
+2.控制器
+    namespace App\Http\Controllers;
+    use DB;
+    use Illuminate\Http\Request;
+    use Illuminate\Support\Facades\Input;
+
+    public function adddata4(Request $request){
+        if ($request->isMethod('get')){
+            return view('addform');
+        }elseif($request->isMethod('post')){
+            $data = $request->all();
+            $data['hobby'] = implode(',',$data['aihao']);
+            unset($data['_token'],$data['aihao'],$data['bt1']);
+            $rst = DB::table('tb_info')->insert($data);
+            dd($rst);
+        }
+    }  
+
+3.视图
+<html5>
+  <form action="/admin/add4" method="post" name="form1">
+      {{csrf_field()}}
+      姓名<input name="name" type="text"><br />
+      性别<input type="radio" name="sex" value="男">男<input type="radio" name="sex" value="女">女<br />
+      班级<select name="banji">
+             <option value="">选择班级</option>
+             <option value="一班">一班</option>
+             <option value="二班">二班</option>
+             <option value="三班">三班</option>
+          </select><br />
+      爱好<input type="checkbox" name="aihao[]" value="足球">足球
+          <input type="checkbox" name="aihao[]" value="篮球">篮球
+          <input type="checkbox" name="aihao[]" value="排球">排球<br />
+      语文<input type="text" name="yuwen"><br />
+      <input type="submit" value="保存" name="bt1">
+  </form>
+</html5>

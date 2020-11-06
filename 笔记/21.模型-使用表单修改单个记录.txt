@@ -1,0 +1,97 @@
+﻿1.首先要获取要修改的记录
+    路由设置：Route::match(['get','post'],'/home/modify3/{id}', 'Home\ManagerController@xiugai3');
+    控制器：
+    public function xiugai3(Request $request,$id){
+         if ($request->isMethod('get')){  //输入网址（含id）则显示要修改的记录到表单中
+            $model = Tb_info::find($id);    //要修改的记录
+            return view('update3',compact('model'));  //显示到视图，并把控制器中表信息传递到视图
+         }elseif($request->isMethod('post')){
+            //控制器获得表单提交过来的信息
+            //写入数据库表，模型的save
+         }
+    }
+
+2.视图接受控制器中传递过来的表（要修改的那条记录）信息。
+    视图获得获得： var xm = '{{$model->name}}';
+
+3.把2中的信息显示在表单（视图）中
+    表单显示：document.getElementsByName('name')[0].value = xm;
+                        ...  ...
+
+4.单击提交按钮之后，控制器中获得表单（视图）提交过来的数据
+   $all = $request->all()；
+
+5.使用4中表单提交过来的数据，修改记录
+    $m = new Tb_info();
+    $model = $m->find($id);   //修改谁？
+    $model->name = $all['name'] ; // 字段赋值
+     ...
+     $model->save();   //写入数据表
+
+======================================
+路由：
+Route::match(['get','post'],'/home/modify3/{id}', 'Home\ManageController@xiugai3');
+控制器：
+    public function xiugai3(Request $request,$id){
+        if ($request->isMethod('get')){
+            $m = Tb_info::find($id);
+            return view('update3',compact('m'));
+        }elseif($request->isMethod('post')){
+            $all = $request->all();
+            $m = new Tb_info();
+            $m2 = $m->find($id);
+            $m2->name = $all['name'];
+            $m2->sex = $all['sex'];
+            $m2->banji = $all['banji'];
+            $m2->yuwen  = $all['yuwen'];
+            if (isset($all['aihao']))
+                $m2->hobby = implode(',',$all['aihao']);
+            else
+                $m2->hobby = '';
+            $rst = $m2->save();
+            dump($rst);
+        }
+    }
+视图：
+<script language="JavaScript">
+    window.onload = function () {
+        var xm = '{{$m->name}}';
+        document.getElementsByName('name')[0].value = xm;
+        var yw = '{{$m->yuwen}}';
+        document.getElementsByName('yuwen')[0].value = yw;
+        var xb = '{{$m->sex}}';
+        if (xb == '男')
+            document.getElementsByName('sex')[0].checked = 'checked';
+        else
+            document.getElementsByName('sex')[1].checked = 'checked';
+        var bj = '{{$m->banji}}';
+        document.getElementsByName('banji')[0].value = bj;
+        var ah = '{{$m->hobby}}';
+        if (ah.indexOf('足球')>=0)
+            document.getElementsByName('aihao[]')[0].checked = 'checked';
+        if (ah.indexOf('篮球')>=0)
+            document.getElementsByName('aihao[]')[1].checked = 'checked';
+        if (ah.indexOf('排球')>=0)
+            document.getElementsByName('aihao[]')[2].checked = 'checked';
+    }
+
+</script>
+<html5>
+    <form action="/home/modify3/{{$m->id}}" method="post">
+        {{csrf_field()}}
+        姓名<input type="text" name="name" ><br />
+        性别<input type="radio" name="sex" value="男">男
+            <input type="radio" name="sex" value="女">女<br />
+        班级<select name="banji">
+              <option value="">选择班级</option>
+              <option value="一班">一班</option>
+              <option value="二班">二班</option>
+              <option value="三班">三班</option>
+            </select><br />
+        爱好<input type="checkbox" name="aihao[]" value="足球">足球
+            <input type="checkbox" name="aihao[]" value="篮球">篮球
+            <input type="checkbox" name="aihao[]" value="排球">排球<br />
+        语文<input type="text" name="yuwen" ><br />
+        <input type="submit" value="save" name="bt1">
+    </form>
+</html5>

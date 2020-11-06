@@ -1,0 +1,50 @@
+﻿1. if标签，用于分支结构，语法格式如下：
+   @if (条件1)
+       语句块1
+   [@elseif (条件2)
+       语句块2
+   ...   
+   @elseif (条件n)
+       语句块n]
+   [@else
+       语句块n+1]]
+   @endif  
+   举例1：今天星期几？ date('w')
+ 
+
+2.循环标签，用于循环结构，语法：
+   @foreach($variable as $key=>$value)
+      语句块
+   @endforeach
+   {{$loop->index}} 
+   {{$loop->count}}
+   {{$loop->remaining}}
+   {{$loop->first}} {{ $loop->last }}
+   举例1，显示一维数组
+        $city = ['wuhan','nanjing','hunan'=>'changsha','nanchang'];
+
+   举例2，显示二维数组
+        $a[] = ['name'=>'liubei'       ,'sex'=>  'male'    ,'age'=>'45'];
+        $a[] = ['name'=>'guanyu'   , 'sex'=>   'female' ,'45',99];
+        $a[] = ['name'=>'zhangfei' ,   'female' ,'age'=>'34'];
+        $a[] = ['machao'  , 'sex'=>  'male'      ,'85'];  
+
+   举例3，显示表记录 
+      配置数据库：
+       env中配置数据库
+       DB_CONNECTION=mysql
+       DB_HOST=127.0.0.1
+       DB_PORT=3306
+       DB_DATABASE=db_kaoshi
+       DB_USERNAME=root
+       DB_PASSWORD=root
+       $db = DB:table('tb_info');
+       $data = $db->get();
+
+
+3. 循环标签，用于循环，语法格式如下：
+   @for (表达式1;表达式2;表达式3)
+       语句块
+   @endfor
+   举例1：求1+2+3+...+100
+       

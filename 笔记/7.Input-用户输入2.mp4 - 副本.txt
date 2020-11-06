@@ -1,0 +1,183 @@
+﻿这次课讲授使用Input接受输入，包括网址、表单和session的输入
+
+接受用户输入的类：Illuminate\Support\Facades\Input
+Facades:门面的思想，门面是介于类的实例化与没有实例化中间的一个状态。其实是类的一个接口的实现。在这个状态下可以不实例化类但是可以调用类中的方法。
+Input::get('')  获取用户的单个输入
+Input::get('参数的名字','如果参数没有被传递使用该默认值')
+Input::all('')  获取所有的输入
+Input::only([])  获取指定的几个输入
+Input::except([]) 获取指定几个用户的输入以外的所有的参数
+Input::has('name')  判断某个输入的参数是否存在
+Input::flash() 输入信息存入session
+Input::flashOnly('参数的名字', ...)：输入信息存放到session
+Input::old();或Input::old(‘参数的名字’) :取出session中存放的变量
+return Redirect::to('URL')->withInput()：带输入跳转
+return Redirect::to('URL')->withInput(Input::except('参数的名字')); 带输入跳转
+
+use Illuminate\Support\Facades\Input；
+use use Illuminate\Http\Request;
+可以直接写成：
+use Input;前提是使用别名机制，配置别名，特定的地方配置数组
+config/app.php配置别名：
+'aliases'  =>[
+  ...
+  ...
+  'Input'  => Illuminate\Support\Facades\Input::class,  //添加的
+]
+
+1. 获得用户输入的某个值：Input::get('参数的名字');
+    public function test1(){
+        $name = Input::get('name');
+        echo $name;
+    }
+2.获得用户输入的某个值，带默认值：Input::get('参数的名字','默认值');
+    public function test2(){
+        $name = Input::get('name','zhangsan');
+        echo $name;
+    }
+3.获得用户全部输入:Input::all();
+    public function test3(){
+        $all = Input::all();
+        dump($all);
+        echo $all['sex'];
+    }
+
+4.获得用户的某些输入:Input::only([ ]);  数组就是要获取的参数的名字
+    public function test4(){
+        $all = Input::only(['name','age']);
+        dump($all);
+        echo $all['name'];
+    }
+
+5.判断是否有某个输入:Input::has([ ]);  参数的名字
+    public function test5(){
+        $bool = Input::has(['name']);
+        $name = $bool?Input::get('name'):'zhangsan';
+        echo $name;
+    }
+6.接受输入，除什么之外 Input::except(['参数1',...])
+    public function test7(){
+        $result = Input::except(['name','sex']);
+        dump($result);
+        echo $result['phone'];
+    }
+7. 接受表单输入
+表单：
+<html5>
+    <form name="form1" action="/test6" method="post">
+        {{csrf_field()}}
+        用户名<input type="text" name="user"><br />
+        性别<input type="radio" name="sex" value="男">男
+            <input type="radio" name="sex" value="女">女
+        爱好<input type="checkbox" name="aihao[]" value="足球">足球
+            <input type="checkbox" name="aihao[]" value="篮球">篮球
+            <input type="checkbox" name="aihao[]" value="排球">排球<br />
+        <input type="submit" value="提交" name="bt1">
+    </form>
+</html5>
+路由：
+Route::match(['get','post'],'/test6',function(Request $request){
+    if ($request->isMethod('get')){
+        return view('showform');
+    }elseif($request->isMethod('post')){
+        $all = Input::all();
+        dd($all);
+    }
+});
+
+8.将用户输入的信息存入Session：Input::flash()；这样不同的网页可以使用
+    public function test9(){
+        Input::flash(); //输入的信息放置在session中
+        echo Input::get('sex');
+    }
+
+9.获取存入在session中的值:Input::old();或Input::old(‘参数的名字’);
+    public function test10(){
+        $old =Input::old();
+        dump($old);
+        $sex = Input::old('sex');
+        dump($sex);
+    }
+10.指定信息放session: Input::flashOnly('参数的名字', ...)
+    public function test12(){
+        $old =Input::flashOnly(['name','sex']);
+    }
+11.指定信息放session: Input::flashExcept('参数的名字');  指定部分变量之外的全部变量存放在session中  
+    public function test11(){
+        $old =Input::flashExcept(['name','sex']);
+    }
+12.获取session中的值:Input::old()；或者 Input::old(‘参数的名字’,...)
+    public function test12(){
+        $old =Input::old();
+        dump($old);
+        $sex = Input::old('sex');
+        dump($sex);
+    }
+参考文献：
+https://laravelacademy.org/post/9676.html
+https://blog.csdn.net/weixin_38112233/article/details/78586306
+https://www.cnblogs.com/lman/p/4650970.html
+===================
+    public function test1(){
+        $name = Input::get('name');
+        echo $name;
+    }
+    public function test2(){
+        $name = Input::get('name','zhangsan');
+        echo $name;
+    }
+    public function test3(){
+        $all = Input::all();
+        dump($all);
+        echo $all['sex'];
+    }
+    public function test4(){
+        $all = Input::only(['name','age']);
+        dump($all);
+        echo $all['name'];
+    }
+    public function test5(){
+        $bool = Input::has(['name']);
+        $name = $bool?Input::get('name'):'zhangsan';
+        echo $name;
+    }
+    public function test6(Request $request){
+        if ($request->isMethod('get')){
+            return view('showform');
+        }elseif($request->isMethod('post')){
+            $all = Input::all();
+            dd($all);
+        }
+    }
+    public function test7(){
+        $result = Input::except(['name','sex']);
+        dump($result);
+        echo $result['phone'];
+    }
+    public function test8(Request $request){
+       if ($request->isMethod('get')){
+           return view('showform2');
+       }elseif($request->isMethod('post')){
+           $all = Input::all();
+           dump($all);
+           echo $all['user']."<br />";
+           echo $all['sex']."<br />";
+           dump($all['aihao']);
+       }
+    }
+    public function test9(){
+        Input::flash(); //输入的信息放置在session中
+        echo Input::get('sex');
+    }
+    public function test10(){
+        $old =Input::old();
+        dump($old);
+        $sex = Input::old('sex');
+        dump($sex);
+    }
+    public function test11(){
+        $old =Input::flashExcept(['name','sex']);
+    }
+    public function test12(){
+        $old =Input::flashOnly(['name','sex']);
+    }

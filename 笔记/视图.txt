@@ -1,0 +1,143 @@
+﻿展示视图
+return view('view1');
+在view文件夹下面新建 view.blade.php,也可以是view.php，前者优先
+分目录管理
+return view('home.test.view2');
+在view文件夹下面新建文件夹home,再新建文件夹test，在新建文件view.blade.php
+
+编写路由：
+Route::get('view1','TestController@view1');
+Route::get('/home/test/view1','TestController@view1');
+运行： http://local.la58.com/view1
+或者：http://local.la58.com/home/test/view1
+效果是一样的额：显示 view1
+控制器：
+	public function view1(){
+		return view('view1');
+	}
+编写视图：
+在view文件夹下面新建 view.blade.php,也可以是view.php，前者优先
+内容:
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+view1
+</body>
+</html>
+
+=========================
+分目录测试：
+路由：
+Route::get('view2','TestController@view2');
+Route::get('/home/test/view2','TestController@view2');
+控制器：
+	public function view2(){
+		return view('home.test.view2');
+	}
+视图：位置是关键，在view/home/test文件夹中
+视图内容：
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+view2
+</body>
+</html>
+运行：http://local.la58.com/view2
+或者：http://local.la58.com/home/test/view2
+运行结果都是：显示view2
+
+=====================
+变量分配与展示
+三种方式
+view('模板'，数组);
+view('模板')->with(数组);
+view('模板')->with(名称，值)->with(名称,值);
+展示方法：
+	public function view1(){
+		$date = date('Y-m-d',time());
+		$day = '日';
+		return view('view1',['date'=>$date,'day'=>$day]);
+	}
+视图中：
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+{{$day}}<br />
+{{$date}}
+</body>
+</html>
+显示：
+日
+2019-07-25
+=============================
+使用compact()函数，php内置函数与框架无关。作用是用于打包数组
+compact('变量名1','变量名2','变量名3',...);将变量的值自动套上去
+
+	public function view1(){
+		$date = date('Y-m-d',time());
+		$day = '日';
+		$city = 'Wuhan';
+		$province = 'Hubei';
+		$location = array('city','province');
+		return view('view1',compact('date','day','city','province'));
+	}
+------------------------------
+<body>
+{{$day}}<br />
+{{$date}}
+{{$city}}
+{{$province}}
+</body>
+=================================
+	public function view1(){
+		$date = date('Y-m-d',time());
+		$day = '日';
+		$city = 'Wuhan';
+		$province = 'Hubei';
+		$location = array('city','province');
+		return view('view1',compact('date','day',$location));
+	}
+<body>
+{{$day}}<br />
+{{$date}}
+{{$city}}
+{{$province}}
+</body>
+------------------
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

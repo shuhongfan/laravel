@@ -1,0 +1,210 @@
+﻿增删改查循环判断
+对数据操作，应该放在Model里面，但是如果不使用Model，我们可以使用laravel框架提供的Db类操作数据库。
+二者都要学。
+建立数据库与配置：
+使用：Db::table('tablename')
+创建数据库：
+1.sql语句：create database命令
+2.图形界面操作：建立数据库
+   Navicat工具：
+   phpmyadmin工具：
+
+3.创建数据表：
+
+4.数据库的配置
+  在.env中
+  config下的database.php可以不修改
+  
+  DB门面已经配置好了(在app.php中配置好了)，不需要写太长的空间 直接 use DB;
+
+  执行php artisan make:controller TestController创建控制器
+
+  编写路由（在routes\web.php中编写）：
+ //DB门面的增删改查
+
+// Route::get('/home/test/add','TestController@add');
+// Route::get('/home/test/del','TestController@del');
+// Route::get('/home/test/update','TestController@update');
+// Route::get('/home/test/select','TestController@select');
+//可以写成
+Route::group(['prefix'=>'/home/test'],function(){
+	Route::get('add','TestController@add');
+	Route::get('del','TestController@del');
+	Route::get('update','TestController@update');
+	Route::get('select','TestController@select');
+}); 
+
+写控制器代码：
+ <?php
+namespace App\Http\Controllers;
+use Illuminate\Http\Request;
+use Input;
+use DB;  //引入门面
+class TestController extends Controller
+{
+    public function add(){
+    	//增加数据使用insert(可以增加多个数据，) 和 insertGetId（一维数组一个记录返回id）
+    	$db = DB::table('表名');
+		//数组，可能是一维数组或者二维数组（多个记录）
+    	$reslut = $db->insert([
+    		[
+                                   字段1=>值1,
+                                   ...  
+    		],
+    		[
+                                   字段1=>值1,
+                                   ...  
+    		],
+    	]);
+    	dd($reslut);
+    }
+}
+运行：http://local.la58.com/home/test/add
+显示：会添加两个记录，返回 true
+也可以是一维数组
+    public function add(){
+    	//增加数据使用insert(可以增加多个数据，) 和 insertGetId（一维数组一个记录返回id）
+    	$db = DB::table('表名');
+		//数组，可能是一维数组或者二维数组（多个记录）
+    	$reslut = $db->insert( 
+    		[
+                                   字段1=>值1,
+                                   ...  
+    		] 
+    	);
+    	dd($reslut);
+    }
+
+使用insertGetId增加一个记录：
+    public function add(){    	
+        $reslut = $db->insertGetId([
+                                   字段1=>值1,
+                                   ...  
+        ]);
+       dd($reslut);
+    }
+返回插入记录的id号，只能插入一个记录
+
+修改：
+    public function update(){    	
+    	$db = DB::table('表名');		
+    	$rst = $db->where('字段','运算符','值')
+    		  ->update([
+                                   字段1=>值1,
+                                   ...  
+    		  ]);
+    	dd($rst);
+    }
+id=1的记录没有，返回0 收到影响的行数
+可以换一个id值。
+
+
+查询全部数据：
+    public function select(){    	
+    	$db = DB::table('表名');		
+    	$rst = $db->get();   //查询全部数据
+    	//dd($rst);          //结果集的集合
+    	foreach ($rst as $key => $value) {
+    		dump($value);
+    		dump($value->name);
+    	}
+    }
+
+    public function select(){    	
+    	$db = DB::table('member');		
+    	$rst = $db->get();   //查询全部数据
+    	//dd($rst);          //结果集的集合
+    	foreach ($rst as $key => $value) {
+    		dump($value);
+    		dump($value->name);  //不能写成 $value['name']
+    		echo $value->age;
+    	}
+    }
+where条件查询
+    public function select(){    	
+    	$db = DB::table('member');		
+    	$rst = $db->where('id','>','3')->get();   //查询全部数据
+    	//dd($rst);          //结果集的集合
+    	foreach ($rst as $key => $value) {
+    		dump($value);
+    		dump($value->name);
+    		echo $value->age;
+    	}
+    }
+
+orWhere Orwhere 或条件，驼峰
+
+    public function select(){    	
+    	$db = DB::table('member');		
+    	$rst = $db->where('字段','运算符','值')->orWhere('字段','运算符','值')->get();   //查询全部数据
+    	//dd($rst);          //结果集的集合
+    	foreach ($rst as $key => $value) {
+    		dump($value);
+    		dump($value->name);
+    		echo $value->age;
+    	}
+    }
+
+    public function select(){    	
+    	$db = DB::table('member');		
+    	$rst = $db->where('字段','运算符','值')->Orwhere('字段','运算符','值')->get();   //查询全部数据
+    	//dd($rst);          //结果集的集合
+    	foreach ($rst as $key => $value) {
+    		dump($key); // 0123456
+    		dump($value->name);
+    		echo $value->age;
+    	}
+    }
+
+可以where -> where -> where
+或者 where orWhere orWhere
+没有andWhere
+取出单行数据
+first() 返回值是一个对象
+    public function select(){    	
+    	$db = DB::table('member');		
+    	$rst = $db->where('字段','运算符','值')->Orwhere('字段','运算符','值')->first();   //
+    	dump($rst);
+    }
+取出具体的某个值
+value,只能得到一个人的某个值
+    public function select(){    	
+    	$db = DB::table('表名');		
+    	$rst = $db->where('字段','运算符','值')->value('字段');   //
+    	dump($rst);
+    }
+别名
+    public function select(){    	
+    	$db = DB::table('表名');		
+    	$rst = $db->where('字段','运算符','值')->select('name as xingming','age','email')->get();   //
+    	dump($rst);
+    }
+
+排序：
+    public function select(){    	
+    	$db = DB::table('member');		
+    	$rst = $db->where('字段','运算符','值')->select('name as xingming','age','email')->orderBy('字段','asc|desc')->get();   //
+    	dump($rst);
+    }
+
+分页显示：
+    public function select(){    	
+    	$db = DB::table('表名');		
+    	$rst = $db->limit(2)->offset(2)->get();
+    	dump($rst);
+    }
+
+
+
+===============================
+
+
+
+
+
+
+
+
+
+
+ 

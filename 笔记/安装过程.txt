@@ -1,0 +1,105 @@
+﻿laravel开发环境搭建过程
+=======================================
+安装视频下载网址：https://pan.baidu.com/s/1FFEcqK3OhEg39gEiu-5p1w
+
+1. 安装phpstudy,切换版本，高一点，比如 V7.*.*
+        有时候可能还需要安装VC11或者其它版本的VC包
+        在命令行运行一下，一定要和phpstudy显示的版本号一致，命令行运行办法
+         php -v
+        如果不一致，请切换到php -v显示的版本，重启apache（也可能自动启动）
+
+----------------------------------------------------
+    larevl对环境要求比较高，需要下面的支持，因此需要配置php.ini
+2. 配置php.ini文件（phpstudy菜单中操作），去掉下面代码行前面的分号
+        extendsion=php_openssl.dll
+        extendsion=php_pdo_mysql.dll
+        extendsion=php_mbstring.dll
+        extendsion=php_fileinfo.dll(验证码)
+        extendsion=php_curl.dll（主要用于请求发送）
+        记得保存并重新启动Apache
+        
+        httpd.conf配置文件需要开启的模块：去掉前面的#
+        loadModule deflate module modules/mod_deflate.so
+        loadModule rewrite module modules/mod_rewrite.so
+
+----------------------------------------------------
+    使用命令和安装需要，所以要配置环境变量
+3. 配置环境变量，把php.exe文件的位置写入到path环境变量，系统环境变量
+      （鼠标右键单击我的电脑->属性->高级系统设置->高级
+                                            ->环境变量->系统变量->path->编辑....）
+        记得删除以前环境变量中包括php的部分
+        写入类似：C:\phpStudy\PHPTutorial\php\php-7.0.12-nts到环境变量，只要目录
+
+----------------------------------------------------
+    composer，软件依赖，音乐指挥者，类似于360软件管家，为laravel项目管理软件
+4. 下载composer，并安装composer，需要网络
+        网址：https://getcomposer.org,下载Composer-Setup.exe
+        运行 Composer-Setup.exe（会用到第3步中的环境变量），基本上就是下一步，下一步
+        安装完成之后，命令行运行composer显示命令 composer（并显示composer版本和日期）表示安装成功  
+        composer版本太旧则需要更新，下载的composer时间久了，可以人为去更新版本：
+        命令行执行：composer self-update
+        或者：composer selfupdate
+
+----------------------------------------------------
+    国外的“软件市场”太遥远，切换到国内镜像packagist.phpcomposer.com
+5. 在部署laravel项目之前，先切换镜像
+       命令行下执行：
+       composer config -g repo.packagist composer https://packagist.phpcomposer.com
+       以后自动从https://packagist.phpcomposer.com更新软件
+
+----------------------------------------------------
+    使用composer部署larevel更好，也可以下载复制
+6. 部署laravel项目
+       新建文件夹 c:\laproject,进入命令行，进入路径c:\laproject,执行：
+       composer create-project laravel/laravel --prefer-dist ./
+       或：
+       composer create-project laravel/laravel --prefer-dist ./la1
+       安装中显示：Installing laravel/laravel (v5.5.28)，是版本（最新版本）
+       还可以在安装命令中指定版本，命令代码：指定版本号
+       composer create-project laravel/laravel=5.4.* --prefer-dist ./lanew     
+
+       命令解释：
+       composer:表示执行composer程序
+       create-project：表示创建项目
+       laravel/Laravel:要创建的项目的名称,前面表示的是laravel项目
+       --prefer-dist：优先下载压缩包方式，而不是直接从github上下载源码（克隆）
+       ./:表示创建项目目录名称
+       执行上面的代码 自动下载laravel到目录 ./ 或者 ./la1
+       版本问题
+       如果不指定版本号，则指定最新的版本
+       指定版本号
+       composer create-project laravel/Laravel=5.4.* --prefer-dist ./la2
+       最好不要用最新的版本
+
+       创建laravel项目的方法，还可以下载laravel5.*，解压并复制到目录中。不建议这种方法
+       第三方网站下载的laravel，软件支持并不好。
+       第三方网站已经有5.8版本(下载复制可以部署)，但是使用composer只能安装到5.5.28
+
+----------------------------------------------------
+    一定要配置到laravel/public文件夹
+7. 配置虚拟主机，域名
+
+----------------------------------------------------    
+    laravel项目必须先约定路由规则，这与其他框架不一样。
+8. 运行，ok
+    http://域名
+    例如：hhttp://la55.com
+
+安装视频下载网址：https://pan.baidu.com/s/1FFEcqK3OhEg39gEiu-5p1w
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

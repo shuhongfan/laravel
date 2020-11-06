@@ -1,0 +1,52 @@
+﻿路由：
+Route::get('/admin/update1', 'TestController@update1');
+Route::get('/admin/update2', 'TestController@update2');
+Route::get('/admin/update3', 'TestController@update3');
+Route::get('/admin/update4', 'TestController@update4');
+
+控制器：
+    public function update1(){
+        $db = DB::table('tb_info');
+        $rst = $db->update(
+          [
+              'yuwen' => 100,
+          ]
+        );
+        dd($rst); //受影响记录的个数
+    }
+    public function update2(){
+        $db = DB::table('tb_info');
+        $rst = $db->where('sex','女')  //将性别等于女的记录的yuwen修改为90
+                ->update(
+            [
+                'yuwen' => 90,
+            ]
+        );
+        dd($rst); //受影响记录的个数
+    }
+
+    public function update3(){
+        $db = DB::table('tb_info');
+        $rst = $db->where('sex','女')
+                  ->where('name','>','刘备')
+        ->update(
+            [
+                'yuwen' => 78,
+                'hobby' => '足球,排球,篮球',
+            ]
+        );
+        dd($rst); //受影响记录的个数
+    }
+
+    public function update4(){
+        $db = DB::table('tb_info');
+        $rst = $db->where('sex','女')
+            ->orWhere('name','>','刘备')
+            ->update(
+                [
+                    'yuwen' => 68,
+                    'hobby' => '排球',
+                ]
+            );
+        dd($rst); //受影响记录的个数
+    }

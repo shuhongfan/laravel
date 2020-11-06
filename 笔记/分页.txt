@@ -1,0 +1,348 @@
+﻿第一步：将laravel56复制粘贴到c盘根目录，改名fenye.
+
+第二步：配置域名：
+            hosts.txt中加入：127.0.0.1    fenye.com
+            vhosts.conf.txt加入：
+	<VirtualHost *:80>
+	    DocumentRoot "C:\fenye\public"
+	    ServerName fenye.com
+ 	   ServerAlias 
+ 	 <Directory "C:\C:\fenye\public\public">
+  	    Options FollowSymLinks ExecCGI
+  	    AllowOverride All
+   	   Order allow,deny
+    	  Allow from all
+    	 Require all granted
+  	</Directory>
+	</VirtualHost>   
+              重启apache
+ 
+第三步：配置数据库
+            .env加入代码：
+            DB_CONNECTION=mysql
+	DB_HOST=127.0.0.1
+	DB_PORT=3306
+	DB_DATABASE=db_kaoshi
+	DB_USERNAME=root
+	DB_PASSWORD=root
+
+第四步：新建视图、控制器、模型
+              fenye.blade.php  TestController Tb_info
+             命令行运行：php artisan make:model Tb_info
+                        protected $table = 'tb_info';
+    	         protected $fillable = ['name','sex','banji','yuwen','hobby'];
+    	         protected $primaryKey = 'id';
+    	         public $timestamps = false;
+             命令行运行：php artisan make:controller TestController
+             views文件夹下新建视图fenye.blade.php
+
+第五步：路由代码：
+	Route::get('/fenye','TestController@fenye');
+
+第六步：控制器代码：
+              use App\Tb_info;
+
+     public function fenye(Request $request){
+        $m = new Tb_info();
+        $data = $m->orderby('id')->paginate(4);
+        return view('fenye',compact('data'));
+    }
+
+
+<link rel="stylesheet" href="{{asset('css/app.css')}}">
+
+第七步：视图：
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="{{asset('css/app.css')}}">
+    <title>分页</title>
+</head>
+<body>
+<table align="center" border="1" width="260" style="border-collapse: collapse" class="dataintable">
+    <thead>
+    <tr>
+        <th>id</th>
+        <th>名字</th>
+        <th>性别</th>
+        <th>爱好</th>
+        <th>班级</th>
+        <th>语文</th>
+    </tr>
+    </thead>
+    <tbody>
+    @foreach($data as $v)
+        <tr>
+            <td>{{$v->id}}</td>
+            <td>{{$v->name}}</td>
+            <td>{{$v->sex}}</td>
+            <td>{{$v->hobby}}</td>
+            <td>{{$v->banji}}</td>
+            <td>{{$v->yuwen}}</td>
+        </tr>
+    @endforeach
+    </tbody>
+    <tfoot>
+    <tr>
+        <td colspan="6" align="center">
+            {{ $data->links() }}
+        </td>
+    </tr>
+    </tfoot>
+</table>
+</body>
+</html>
+
+==================================
+ 
+ 
+
+use：
+use Illuminate\Pagination\Paginator;
+use Illuminate\Http\Request;
+use App\Home\Tb_info;
+
+路由：
+Route::get('/home/fenye','Home\ManageController@fenye');
+
+控制器：
+    public function fenye(Request $request){
+        $m = new Tb_info();
+        $data = $m->orderby('id')->paginate(4);
+//        echo $data->currentPage();  //当前页号
+//        dump($data->firstItem());    //每页第一个记录的id号码
+//        dump($data->hasMorePages()); //最后一页为false
+//        dump($data->lastItem());     //每页最后一项的id号码
+//        dump($data->lastPage());     //最后一页的页号
+//        dump($data->nextPageUrl());  //最后一页的网址
+//        dump($data->perPage());      //每页显示几个记录
+//        dump($data->previousPageUrl()); //前一页面的网址
+//        dump($data->total());           //记录数
+//        dump($data->url(5));            //第五页的网址
+//        dump($data->count());           //当前页记录数，最后一页记录数不一定等于$data->perPage()
+        return view('showfenye',compact('data'));
+    }
+
+视图：
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="{{asset('css/app.css')}}">
+    <link rel="stylesheet" href="{{asset('css/css1.css')}}">
+    <title>分页</title>
+</head>
+<body>
+<table align="center" border="1" width="260" style="border-collapse: collapse" class="dataintable">
+    <thead>
+    <tr>
+        <th>id</th>
+        <th>名字</th>
+        <th>性别</th>
+        <th>爱好</th>
+        <th>班级</th>
+        <th>语文</th>
+    </tr>
+    </thead>
+    <tbody>
+    @foreach($data as $v)
+        <tr>
+            <td>{{$v->id}}</td>
+            <td>{{$v->name}}</td>
+            <td>{{$v->sex}}</td>
+            <td>{{$v->hobby}}</td>
+            <td>{{$v->banji}}</td>
+            <td>{{$v->yuwen}}</td>
+        </tr>
+    @endforeach
+    </tbody>
+    <tfoot>
+    <tr>
+        <td colspan="6" align="center">
+            {{ $data->links() }}
+            {{--@if ($data->onFirstPage())--}}
+                {{--<ul class="pagination pagination-sm no-margin no-padding pull-right">--}}
+                   {{--<li class="disabled"><span>第一页</span></li>--}}
+                   {{--<li class="disabled"><span>上一页</span></li>--}}
+                {{--</ul>--}}
+            {{--@else--}}
+                {{--<ul class="pagination pagination-sm no-margin no-padding pull-right">--}}
+                   {{--<li><a href="{{ $data->url(1) }}" rel="next">第一页</a></li>--}}
+                   {{--<li><a href="{{ $data->previousPageUrl() }}" rel="prev">上一页</a></li>--}}
+                {{--</ul>--}}
+            {{--@endif--}}
+
+
+            {{--@if ($data->hasMorePages())--}}
+               {{--<ul class="pagination pagination-sm no-margin no-padding pull-right">--}}
+                 {{--<li><a href="{{ $data->nextPageUrl() }}" rel="next">下一页</a></li>--}}
+                 {{--<li><a href="{{ $data->nextPageUrl() }}" rel="next">最后一页</a></li>--}}
+               {{--</ul>--}}
+            {{--@else--}}
+               {{--<ul class="pagination pagination-sm no-margin no-padding pull-right">--}}
+                 {{--<li class="disabled"><span>下一页</span></li>--}}
+                 {{--<li class="disabled"><span>最后一页</span></li>--}}
+               {{--</ul>--}}
+            {{--@endif--}}
+                {{--<ul class="pagination pagination-sm no-margin no-padding pull-right">--}}
+                  {{--<li>第{{ $data->currentPage()}}页/共{{ $data->lastPage() }}页</li>&nbsp;&nbsp;&nbsp;--}}
+                  {{--<li>每页{{ $data->perPage() }}条/共{{ $data->total() }} 条</li>--}}
+                {{--</ul>--}}
+        </td>
+    </tr>
+    </tfoot>
+</table>
+</body>
+</html>
+
+第八步：发布分页效果
+php artisan vendor:publish --tag=laravel-pagination
+views/vendor/pagination/bootstrap-4.blade.php
+
+
+
+第九步：切换Paginator::defaultView(‘vendor.pagination.default’); 
+要加：use Illuminate\Pagination\Paginator;
+
+获得url
+$url = Input::url();
+$url = Request::getRequestUri();
+
+bootstrip-4.blade.php
+@if ($paginator->hasPages())
+    <ul class="pagination">
+        {{-- Previous Page Link --}}
+        @if ($paginator->onFirstPage())
+            <li class="page-item disabled"><span class="page-link">|<</span></li>
+            <li class="page-item disabled"><span class="page-link"> < </span></li>
+        @else
+            <li class="page-item"><a class="page-link" href="{{ $paginator->url(1) }}" rel="prev">|<</a></li>
+            <li class="page-item"><a class="page-link" href="{{ $paginator->previousPageUrl() }}" rel="prev"> < </a></li>
+        @endif
+
+        {{-- Pagination Elements --}}
+        @foreach ($elements as $element)
+            {{-- "Three Dots" Separator --}}
+            @if (is_string($element))
+                <li class="page-item disabled"><span class="page-link">{{ $element }}</span></li>
+            @endif
+
+            {{-- Array Of Links --}}
+            @if (is_array($element))
+                @foreach ($element as $page => $url)
+                    @if ($page == $paginator->currentPage())
+                        <li class="page-item active"><span class="page-link">{{ $page }}</span></li>
+                    @else
+                        <li class="page-item"><a class="page-link" href="{{ $url }}">{{ $page }}</a></li>
+                    @endif
+                @endforeach
+            @endif
+        @endforeach
+
+        {{-- Next Page Link --}}
+        @if ($paginator->hasMorePages())
+            <li class="page-item"><a class="page-link" href="{{ $paginator->nextPageUrl() }}" rel="next"> > </a></li>
+        @else
+            <li class="page-item disabled"><span class="page-link"> > </span></li>
+        @endif
+
+        @if ($paginator->hasMorePages())
+                <li class="page-item"><a class="page-link" href="{{ $paginator->url($paginator->lastPage()) }}" rel="next">>|</a></li>
+        @else
+                <li class="page-item disabled"><span class="page-link">>| </span></li>
+        @endif
+
+            <li>第{{ $paginator->currentPage()}}页/共{{ $paginator->lastPage() }}页</li>&nbsp;&nbsp;&nbsp;
+            <li>每页{{ $paginator->perPage() }}条/共{{ $paginator->total() }} 条</li>
+
+    </ul>
+@endif
+
+
+====================
+
+$results->count()
+
+$results->currentPage()
+
+$results->firstItem()
+
+$results->hasMorePages()
+
+$results->lastItem()
+
+$results->lastPage() 
+(使用simplePaginate 时无效)
+$results->nextPageUrl()
+
+$results->perPage()
+
+$results->previousPageUrl()
+
+$results->total() (使用simplePaginate 时无效)
+
+$results->url($page)
+==========================
+use Illuminate\Pagination\Paginator;
+
+
+Route::get('/fenye','TestController@fenye');
+
+Route::match(['get','post'],'/xiugai/id/{id}','TestController@xiugai');
+
+Route::get('/del/id/{id}','TestController@del');
+
+
+
+use App\Tb_info;
+use Illuminate\Pagination\Paginator;
+use Session;
+
+        public function fenye(Request $request){
+        $m = new Tb_info();
+        $data = $m->orderby('id')->paginate(4);
+        //Paginator::defaultView('vendor.pagination.default');
+        $p = $data->currentPage();
+        session(['p' => $p]);
+        return view('fenye',compact('data','p'));
+    }
+
+    public function xiugai(Request $request,$id){
+        if ($request->isMethod('get')){
+            $m1 = new Tb_info();
+            $m =  $m1->find($id);
+            return view('modify',compact('m'));
+        }elseif($request->isMethod('post')){
+            $all = $request->all();
+            $m = new Tb_info();
+            $m2 = $m->find($id);
+            $m2->name = $all['name'];
+            $m2->sex = $all['sex'];
+            $m2->class = $all['class'];
+            $m2->photo  = $all['photo'];
+            if (isset($all['aihao']))
+                $m2->hobby = implode(',',$all['aihao']);
+            else
+                $m2->hobby = '';
+            $rst = $m2->save();
+            $p = session('p');
+            return redirect("/fenye?page=$p");
+        }
+    }
+
+    public function del($id){
+        Tb_info::destroy($id);
+        $p = session('p');
+        return redirect("/fenye?page=$p");
+    }
+
+
+fenye.blade.php
+            <td><a href="/xiugai/id/{{$v->id}}">修改</a>
+                <a href="/del/id/{{$v->id}}" onclick="return confirm('Are you ok?');">删除</a>
+            </td>
+
+
+modify.blade.php
+<form action="/xiugai/id/{{$m->id}}" method="post">

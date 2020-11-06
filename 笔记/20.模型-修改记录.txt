@@ -1,0 +1,50 @@
+﻿单个记录的修改：
+修改过程：
+    实例化模型：
+         $m = new Tb_info();
+    查询：
+         $rst = $m->find(4);
+         结果还是模型Tb_info
+    设置属性：
+         $rst->hobby = '足球'; 
+         ... 
+    保存
+         $rst->save();
+
+例如下例：
+1.路由：
+    Route::get('/home/modify1','Home\ManageController@xiugai1');
+ 
+2.控制器：
+    public function xiugai1(){
+        $m = new Tb_info();
+        $rst = $m->find(4);
+        $rst->name = '刘封';
+        //$rst->sex = '女';
+        $rst->hobby = '足球';
+        $rst->yuwen = 90;
+        $rst->banji = '一班';
+        $rst->save();
+    }
+3.视图：无
+==================================
+
+多个记录的修改
+    使用模型的静态方法：
+    Tb_info::where(条件)->update([修改的键值对]);
+
+例如下例：
+4. 路由：
+    Route::get('/home/modify2','Home\ManageController@xiugai2');
+
+5.控制器：
+    public function xiugai2(){
+        $rst =  Tb_info::where('id','>','20')->update([
+            'sex'  => '女',
+            'yuwen'=> 99,
+            'hobby'=>'篮球',
+        ]);
+        dd($rst);
+    }
+
+6.视图：无

@@ -1,0 +1,151 @@
+﻿Route::get('/test1','TestController@test1');
+...
+Route::get('/test7','TestController@test7');
+use Session;
+class TestController extends Controller
+{
+    public function test1(){
+        Session::put('name','zhangsan');  //存储一个session
+        session(['sex' => 'male','age'=>18]);       //存储session
+    }
+    public function test2(){
+        echo session('sex')."<br />";
+        echo session('name')."<br />";
+        $value = Session::get('name');
+        echo $value."<br />";
+        $value2 = Session::get('sex');
+        echo $value2."<br />";
+        echo Session::get('age');
+    }
+    public function test3(){
+        Session::forget('age');   //删除session('age')
+    }
+    public function test4(){
+        Session::flush();        //删除全部session
+    }
+    public function test5(){
+        if (Session::has('name'))
+            echo session('name');
+        else
+            echo "不存在！";
+    }
+    public function test6(){
+        $all = Session::all();
+        dump($all);
+        dump($all['age']);
+    }
+    public function test7(){
+        $hobby = Session::get('hobby','football');
+        dump($hobby);
+        if (Session::has('hobby'))
+            echo session('hobby');
+        else
+            echo "不存在！";
+    }
+config/session.php 
+return [
+	'driver' => env('SESSION_DRIVER', 'file'),
+	'lifetime' => 120,
+	'expire_on_close' => false,
+	'encrypt' => false,
+	'files' => storage_path('framework/sessions'),
+	'connection' => null,
+	'table' => 'sessions',
+	'lottery' => [2, 100],
+	'cookie' => 'laravel_session',
+	'path' => '/',
+	'domain' => null,
+	'secure' => false,
+];
+
+数组保存到数据库或者文件，序列化函数
+练习：做一个登录程序，使用session。
+输入用户名和密码。正确则显示全部记录。
+不允许直接登录，还可以添加正常退出按钮。
+=================================
+Route::match(['get','post'],'/login','TestController@login');
+Route::match(['get','post'],'/showdata','TestController@showdata');
+Route::match(['get','post'],'/shanchu','TestController@shanchu');
+
+use App\Tb_user;
+use App\Tb_info;
+use Sesson;
+    public function showdata(){
+            if (!session('user')){
+                return redirect('/login');
+            }else{
+                $m2 = new Tb_info();
+                $m2 = $m2->all()->toArray();  //->toArray()可以二维foreach
+                $col = Schema::getColumnListing('tb_info');
+                $user = session('user');
+                return view('showlist',compact('m2','col','user'));
+            }
+    }
+    public function login(Request $request){
+        if ($request->isMethod('get')){
+            return view('login');
+        }elseif($request->isMethod('post')){
+            $m = new Tb_user();
+            $all = $request->all();
+            $user = $all['user'];
+            $pwd = $all['pwd'];
+            $rst = $m->where('user',$user)->where('pwd',$pwd)->get();
+            $rst = $rst->toArray();
+            if ($rst){
+                session(['user' =>$user,'pwd' =>$pwd ]);
+                return redirect('/showdata');
+            }
+            else{
+                return view('login');
+            }
+        }
+    }
+    public function shanchu(Request $request){
+         $request->session()->forget('user');      
+    }
+视图
+<html5>
+    <form action="/shanchu" method="post">
+    <table align="center" style="border-collapse: collapse" border="1" width="400">
+        <thead>
+        <tr>
+            <th colspan="6">欢迎你.{{$user}}</th>
+        </tr>
+        <tr>
+            @foreach($col as $c)
+                <th>{{$c}}</th>
+            @endforeach
+        </tr>
+        </thead>
+        @foreach($m2 as $v1)
+            <tr>
+                @foreach($v1 as $v2)
+                    <td>{{$v2}}</td>
+                @endforeach
+            </tr>
+        @endforeach
+        <tr>
+            <td colspan="6" align="center">
+                    {{csrf_field()}}
+                    <input type="submit" value="安全退出" name="bt1">
+            </td>
+        </tr>
+    </table>
+    </form>
+</html5>
+
+login.blade.php
+<html5>
+    <table align="center" width="400" border="1">
+        <tr>
+          <td>
+              <form action="/login" method="post" name="form1">
+                  {{csrf_field()}}
+                  用户名<input type="text" name="user"><br />
+                  密&nbsp;&nbsp;&nbsp;码<input type="text" name="pwd"><br />
+                  <input type="submit" name="bt1" value="登录">
+              </form>
+          </td>
+        </tr>
+    </table>
+</html5>

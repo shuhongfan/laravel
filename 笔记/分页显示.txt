@@ -1,0 +1,103 @@
+﻿路由
+Route::get('/home/test/test14','ManagerController@test14');
+控制器
+	public function test14(Request $request){
+		$data = Member::orderby('id')->paginate(2);  //记录数，支持使用where  orderby等
+
+
+
+		return view('test14',compact('data'));
+	}
+视图：
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>分页</title>
+</head>
+<body>
+<table align="center" border="1" width="740">
+    <thead>
+        <tr>
+            <th>id</th>
+            <th>名字</th>
+            <th>年龄</th>
+            <th>邮箱</th>
+            <th>图像</th>
+        </tr>
+    </thead>
+    <tbody>
+    @foreach($data as $v)
+        <tr>
+            <td>{{$v->id}}</td>
+            <td>{{$v->name}}</td>
+            <td>{{$v->age}}</td>
+            <td>{{$v->email}}</td>
+            <td><img src="{{ltrim($v->avatar,'.')}}" width="40" height="30"></td>
+        </tr>
+    @endforeach
+    </tbody>
+    <tfoot>
+        <tr>
+            <td colspan="5">
+                {{ $data->links() }}
+            </td>
+        </tr>
+    </tfoot>
+</table>
+</body>
+</html>
+
+修改：E:\laravel54\vendor\laravel\framework\src\Illuminate\Pagination\resources\views\default.blade.php
+可以修改显示的样式
+
+可以使用simplePagenate(每页显示记录数)进行简单的分页，上一页，下一页
+
+分页对象->count()
+分页对象->currentPage()
+分页对象->firstItem()
+分页对象->hasMorePages()
+分页对象->lastItem()
+分页对象->lastPage()
+分页对象->nextPageUrl()
+分页对象->perPage()
+分页对象->previousPageUrl()
+分页对象->total()
+分页对象->url(5)
+
+=====
+写得好看一些
+百度网页搜素分页效果：加上
+<link rel="stylesheet" href="{{asset('css/app.css')}}">
+效果很美
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

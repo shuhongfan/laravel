@@ -1,0 +1,117 @@
+﻿使用Validator类来验证，格式：
+           Validator::make(输入的信息,验证规则数组);
+
+如：
+$validator = Validator::make($request->all(),[
+                'user'  =>  'required|min:2|max:20',
+                'mail'  =>  'required|email',
+                'age'   =>  'required|min:1|max:100',
+                'riqi'    =>  'required|date',
+                'sex'    =>  'required',
+                'banji'  =>  'required',
+             'hobby'  =>  'required',
+            ] );
+
+验证错误信息为：$info = $validator->messages()->toArray()，使用toArray()变成数组; $info['user']，$info['mail']，$info['age']分解出来的信息。
+
+
+
+
+下面举例实现表单验证：
+
+路由：
+Route::match(['get','post'],'/test1','TestController@test1');
+
+控制器：
+namespace App\Http\Controllers;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Input;
+use Validator;
+class TestController extends Controller
+{
+    public function test1(Request $request){
+        if (Input::method() == 'GET'){
+            $info1 = $info2 = $info3 = $info4 = $info5 = $info6 = $info7 = '';
+            return view('showform',compact('info1','info2','info3','info4'));
+        }else{
+            $validator = Validator::make($request->all(),[
+                    'user' =>  'required|min:2|max:20',
+                    'mail' =>  'required|email',
+                    'age'  =>  'required|min:1|max:100',
+                    'riqi' =>  'required|date',
+                    'sex'  =>  'required',
+                    'banji'=>  'required',
+                    'hobby' => 'required',
+            ] );
+
+            if ($validator->passes()){
+                echo "格式正确，这里是数据处理，比如修改，添加等操作";
+            }else{
+                $info = $validator->messages()->toArray();  //错误信息
+    public function test1(Request $request){
+        if (Input::method()=='GET'){
+            $info1 = $info2 = $info3 = $info4 = $info5 = $info6 = $info7 = "";
+            return view('showform',compact('info1','info2','info3','info4','info5','info6','info7'));
+        }else{
+            $validator = Validator::make($request->all(),[
+                'user'  =>  'required|min:2|max:20',
+                'mail'  =>  'required|email',
+                'age'   =>  'required|integer|min:1|max:100',
+                'riqi'    =>  'required|date',
+                'sex'    =>  'required',
+                'banji'  =>  'required',
+                'hobby'  =>  'required',
+            ]);
+            if ($validator->passes()){
+                echo "验证通过，下面获取表单中的信息，进行修改或者添加";
+                $all = $request->all();
+                dump($all);
+            }else{
+                $info = $validator->messages()->toArray(); //错误信息
+                $info1 = $info2 = $info3 = $info4 = $info5 = $info6 = $info7 = "";
+                if (isset($info)){
+                    if (isset($info['user']))
+                        $info1 = ' *'.implode(';',$info['user']);
+                    if (isset($info['mail']))
+                        $info2 = ' *'.implode(';',$info['mail']);
+                    if (isset($info['age']))
+                        $info3 = ' *'.implode(';',$info['age']);
+                    if (isset($info['riqi']))
+                        $info4 = ' *'.implode(';',$info['riqi']);
+                    if (isset($info['sex']))
+                        $info5 = ' *'.implode(';',$info['sex']);
+                    if (isset($info['banji']))
+                        $info6 = ' *'.implode(';',$info['banji']);
+                    if (isset($info['hobby']))
+                        $info7 = ' *'.implode(';',$info['hobby']);
+                }
+                return view('showform',compact('info1','info2','info3','info4','info5','info6','info7'));
+            }
+        }
+    }
+            }
+        }
+    }
+}
+
+
+视图：
+<form action="/test1" method="post" name="form1">
+        {{csrf_field()}}
+        用户名<input type="text" name="user"><span>{{$info1}}</span><br />
+        邮箱<input type="text" name="mail"><span>{{$info2}}</span><br />
+        年龄<input type="text" name="age"><span>{{$info3}}</span><br />
+        入党日期<input type="text" name="riqi"><span>{{$info4}}</span><br />
+        性别<input type="radio" name="sex" value="男">男
+            <input type="radio" name="sex" value="女">女<span>{{$info5}}</span><br />
+        班级<select name="banji">
+              <option value="">选择班级</option>
+              <option value="一班">一班</option>
+              <option value="二班">二班</option>
+              <option value="三班">三班</option>
+            </select><span>{{$info6}}</span><br />
+        爱好<input type="checkbox" name="hobby[]" value="足球">足球
+            <input type="checkbox" name="hobby[]" value="篮球">篮球
+            <input type="checkbox" name="hobby[]" value="排球">排球<span>{{$info7}}</span><br />
+        <input type="submit" value="提交" name="bt1">
+    </form>

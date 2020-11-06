@@ -1,0 +1,19 @@
+﻿1.路由：
+Route::match(['get','post'],'/login',function(Request $request){
+    if ($request->isMethod('get')){
+        echo $request->input('user')."<br />";
+        //return view('login');
+    }elseif($request->isMethod('post')){
+        echo $request->input('user')."<br />";
+        echo $request->input('pwd');
+    }
+})->name('login');
+2.视图：
+<html5>
+    <form action="{{Route('login')}}" method="post" name="form1">
+        {{csrf_field()}}
+        用户名<input type="text" name="user"><br />
+        密码<input type="text" name="pwd"><br />
+        <input type="submit"name="bt1" value="登录">
+    </form>
+</html5>

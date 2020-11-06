@@ -1,0 +1,73 @@
+﻿Route::get('/admin/del1', 'TestController@del1');
+Route::get('/admin/del2', 'TestController@del2');
+Route::get('/admin/del3', 'TestController@del3');
+Route::get('/admin/del4', 'TestController@del4');
+Route::get('/admin/statement1', 'TestController@statement1');
+Route::get('/admin/statement2', 'TestController@statement2');
+Route::get('/admin/statement3', 'TestController@statement3');
+
+1.  public function del1()
+    {
+        $db = DB::table('tb_info');
+        $rst = $db->delete();  //删除全部记录
+        dd($rst);              //受影响的记录条数
+    }
+
+
+2.  public function del2()
+    {
+        $db = DB::table('tb_info');
+        $rst = $db->where('name','刘备')->delete();  //删除name为刘备的记录
+        //where和orWhere在这里也可以使用，使用方法和前面相同
+        dd($rst);              //受影响的记录条数
+    }
+
+
+3.  public function del3()
+    {
+        $db = DB::table('tb_info');
+        $rst = $db->truncate();  //删除全部记录，返回null
+        dd($rst);
+    }
+
+
+4.    public function del4()
+    {
+        //逻辑删除，通过某个字段控制显示，实际应用很少物理删除记录，逻辑删除使用更多
+    }
+
+5.
+    public function statement1()
+    {   //用于增删改，查要使用select
+        $rst = DB::statement("insert into tb_info(`name1`,`sex`,`banji`,`hobby`,`yuwen`) values('司马昭','男','四班','排球','99') ");
+        dd($rst);  //返回true
+    }
+
+
+    public function statement2()
+    {
+6.        //$rst = DB::statement('drop table tb_info');删除表
+7.        //$rst = DB::statement('delete from tb_info where `name` like "刘%"');  //删除姓刘的
+8.       //$rst = DB::statement('update tb_info set `name`="李白",`sex`="男" where `name`="马超"');//马超改成李白
+9.        //$rst = DB::statement('select * from tb_info');//返回true
+10        //$rst = DB::select('select * from tb_info');//返回记录
+        //dump($rst);
+    }
+
+
+11.    public function statement3()
+    {
+        //DB::insert("insert into tb_info (name,sex,yuwen,hobby,banji) values (?,?,?,?,?)", ['吕布','男',99,'足球','三班']);添加吕布，占位符
+
+12.        //DB::insert("insert into tb_info (name,sex,yuwen,hobby,banji) values (:xm,:xb,:yw,:ah,:bj)", ['xm'=>'典韦','xb'=>'男','yw'=>99,'ah'=>'足球','bj'=>'三班']);
+
+13.        //$array1 = ['xm'=>'许褚','xb'=>'男','yw'=>99,'ah'=>'足球','bj'=>'三班'];
+        //DB::insert("insert into tb_info (name,sex,yuwen,hobby,banji) values (:xm,:xb,:yw,:ah,:bj)", $array1);
+
+
+14.
+        //DB::delete("delete from tb_info where `name` like :name",['name'=>'吕%']);  //删除姓吕的
+
+15.
+        //DB::update("update tb_info set name=?,sex=? where yuwen=80",['典韦','男']);
+    }

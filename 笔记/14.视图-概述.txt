@@ -1,0 +1,259 @@
+﻿1. 视图应该放在哪里？是否可以分目录管理视图？视图文件名是什么？
+    1）视图文件应该放在resource\view文件夹下面；
+    2）可以分目录管理视图；在view文件夹下再创建子目录；写法：
+             return view(home.test.test1);或者：return view(home/test/test1);   
+    3）视图文件名为：视图.blade.php， 或者：视图.php（不建议）；
+           视图文件 .blade.php优先
+     文件名建议小写。视图是php文件。放在resource的view文件夹下面。
+     测试Route::get('/admin/shitu1','TestController@shitu1');
+     shitu1.blade.php  shitu1.php 发现前者优先。
+
+
+2.可以使用{{$变量}}还可以使用原生态php语法显示数据<?php echo $a;?>
+    public function shitu2(){
+        $city1 = "wuhan";
+        $city2 = "changsha";
+        //return view('shitu2',['city1'=>$city1,'city2'=>$city2]);
+        return view('shitu2',compact('city1','city2'));
+    }
+  或者：
+    <html5>
+       <body>
+        {{$city1}}
+      <?php echo $city2;?>
+      </body>
+    </html5>
+   都可以。
+===========================
+Route::get('/testview1', function () {
+    $t = time();
+    return view('testview1',compact('t'));
+});
+-----------------------------------
+    {{time()}}
+    {{$t}}
+
+===========================
+      public function testview2(){
+        $hubei = 'Wuhan';
+        $hunan = 'Changsha';
+        $jiangxi = 'Nanchang';
+        $anhui = 'Hefei';
+        $arr = array('jiangxi','anhui');
+        return view('testview2',compact('hubei','hunan',$arr));
+    }
+-----------------------------------
+<html5>
+{{$hubei}}
+{{$hunan}}
+{{$jiangxi}}
+</html5>
+===========================
+        $city1 = "wuhan";
+        $city2 = "changsha";
+        $city3 = ['zhengzhou','shijiazhuang','anhui'=>'hefei'];
+        return view('shitu2',compact('city1','city2','city3'));
+  --------------------
+    <body>
+    {{$city1}}
+    <?php dump($city3);?>
+    </body>
+  --------------------
+   显示：
+   wuhan 
+   array:3 [▼
+     0 => "zhengzhou"
+     1 => "shijiazhuang"
+     "anhui" => "hefei"
+   ]
+  ===================
+        $hubei = "wuhan";
+        $hunan = "changsha";
+        $jiangxi = "nanchang";
+        $anhui = "hefei";
+        $arr1 = ['jiangxi','anhui'];
+        return view('shitu2',$x = compact('hubei','hunan',$arr1));
+  ------------------------
+    <body>
+    <?php echo $hubei;?>
+    {{dump($hubei)}}
+    {{dump($hunan)}}
+    {{$jiangxi}}
+    </body>
+  ------------------------
+   wuhan 
+   
+   "wuhan"
+    wuhan 
+   
+   "changsha"  
+    changsha 
+
+    nanchang 
+  ===================
+        $a[0] = array('name'=>'zhangsan','age'=>'19','sex'=>'male');
+        $a[1] = array('name'=>'lisi','age'=>'31','sex'=>'male');
+        $a[2] = array('name'=>'wangwu','age'=>'22','sex'=>'female');
+        $a[3] = array('name'=>'zhaoliu','age'=>'21','sex'=>'female');
+        return view('shitu2',compact('a'));
+  ------------------------
+    <body>
+    {{dump($a[0]['sex'])}}
+    </body>
+  =====================
+        $a[] = array('name'=>'liubei','sex'=>'male','age'=>12);
+        $a[] = array('name'=>'guan','sex'=>'male','age'=>12);
+        $a[] = array('name'=>'liubei','sex'=>'male','age'=>12);
+        $a[] = array('name'=>'ma','sex'=>'female','age'=>15);
+        return view('shitu2',compact('a'));
+
+   --------------------------
+    @foreach($a as $key=>$value)
+      {{$value['name']}}<br />
+    @endforeach
+  ======================
+  
+
+
+3.变量分配与展示，三种方法：
+   view(模板文件名,数组)    记这个
+   view(模板文件名)->with(数组)
+   view(模板文件名)->with(名称,值)->with(名称,值)->with(名称,值)->with(名称,值)
+
+4.分配变量之后，视图中使用{{}}方式展示
+  return view('home.test.test1',['a'=>$date,'b'=>$day,'c'=>$x]);
+尽量一致：
+ return view('home.test.test1',['date'=>$date,'day'=>$day,'x'=>$x]);
+
+5.展示变量
+   {{$date}}
+  
+6.compact函数,php函数，  用于打包数组
+  compact(变量名1，变量名2，...)打包成数组
+  $city = 'wuhan';
+  $state= 'hubei';
+  $event = 'aaa';
+
+  $location = array('city','srate');
+  $result = compact("event",'nothing',$location);
+ print_r($rsult);
+  显示：
+    event=> aaa
+    city=>wuhan
+    state=>hubei
+    键 变量名
+    值 变量值
+
+7.
+ return view('home.test.test1',['date'=>$date,'day'=>$day,'x'=>$x]);
+写成：
+ return view('home.test.test1',compact('date','day'));
+
+8.视图中使用函数
+   {{函数名(参数1，参数2，参数3...)}}  php写法
+   函数可以是php内置的或者 laravel框架中定义的
+   函数要先声明 
+
+
+视图全部代码：
+===========================================
+路由代码如下：
+Route::get('/test1', function () {
+    return view('testview1');
+});
+Route::get('/test2', 'TestController@testview2');
+Route::get('/test3', 'TestController@testview3');
+Route::get('/test4', 'TestController@testview4');
+Route::get('/test5', 'TestController@testview5');
+
+视图代码如下：
+===========================================
+testview1.blade.php:
+
+<html5>
+    hello view!
+</html5>
+--------------------------------------------------------
+view2.balde.php:
+
+<html5>
+    hello view2
+    {{$t}}
+    {{$age}}
+    {{time()}}
+</html5>
+--------------------------------------------------------
+view3.balde.php:
+
+<html5>
+{{$hubei}}
+    <?php echo $hunan;?>
+    {{$hunan}}
+    {{$jiangxi}}
+</html5>
+--------------------------------------------------------
+view4.balde.php:
+
+<html5>
+    {{$hubei}}
+    <?php echo $hunan; ?>
+    <?php dump($henan); ?>
+</html5>
+--------------------------------------------------------
+view5.balde.php:
+
+<html5>
+    <?php dump($a); ?>
+    @foreach($a as $v)
+       {{$v['name']}}
+        {{$v['age']}}
+{{$v['sex']}}<br />
+    @endforeach
+</html5>
+===========================================
+控制器代码：
+    public function testview2(){
+        $t = time();
+        $age = 18;
+        return view('view2',['t'=>$t,'age'=>$age]);
+    }
+    public function testview3(){
+        $hubei = 'Wuhan';
+        $hunan = 'Changsha';
+        $jiangxi = 'Nanchang';
+        $anhui = 'Hefei';
+        $arr = array('jiangxi','anhui');
+        return view('view3',compact('hubei','hunan',$arr,'x'));
+    }
+    public function testview4(){
+        $hubei = 'Wuhan';
+        $hunan = 'Changsha';
+        $henan = ['Zhengzhou','Kaifeng','Mudan'=>'Luoayang'];
+        return view('view4',compact('hubei','hunan','henan'));
+    }
+    public function testview5(){
+        $a[] = array('name'=>'liubei','sex'=>'male','age'=>12);
+        $a[] = array('name'=>'guan','sex'=>'male','age'=>12);
+        $a[] = array('name'=>'liubei','sex'=>'male','age'=>12);
+        $a[] = array('name'=>'ma','sex'=>'female','age'=>15);
+        return view('view5',compact('a'));
+    }
+===========================================
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

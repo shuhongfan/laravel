@@ -1,0 +1,70 @@
+﻿1. 视图应该放在哪里？是否可以分目录管理视图？视图文件名是什么？
+    1）视图文件应该放在resource\view文件夹下面；
+    2）可以分目录管理视图；在view文件夹下再创建子目录；写法：
+             return view(home.test.test1);或者：return view(home/test/test1);   
+    3）视图文件名为：视图.blade.php， 或者：视图.php（不建议）；
+           视图文件 .blade.php优先
+     文件名建议小写。视图是php文件。放在resource的view文件夹下面。
+     测试Route::get('/admin/shitu1','TestController@shitu1');
+     shitu1.blade.php  shitu1.php 发现前者优先。
+
+
+2.可以使用{{$变量}}还可以使用原生态php语法显示数据<?php echo $a;?>    
+3.变量分配与展示，三种方法：
+   view(模板文件名,数组)    记这个
+   view(模板文件名)->with(数组)
+   view(模板文件名)->with(名称,值)->with(名称,值)->with(名称,值)->with(名称,值)
+
+4.分配变量之后，视图中使用{{}}方式展示
+  return view('home.test.test1',['a'=>$date,'b'=>$day,'c'=>$x]);
+尽量一致：
+ return view('home.test.test1',['date'=>$date,'day'=>$day,'x'=>$x]);
+
+5.展示变量
+   {{$date}}
+  
+6.compact函数,php函数，  用于打包数组
+  compact(变量名1，变量名2，...)打包成数组  
+
+7.
+ return view('home.test.test1',['date'=>$date,'day'=>$day,'x'=>$x]);
+写成：
+ return view('home.test.test1',compact('date','day'));
+
+8.视图中使用函数
+   {{函数名(参数1，参数2，参数3...)}}  php写法
+   函数可以是php内置的或者 laravel框架中定义的
+   函数要先声明 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

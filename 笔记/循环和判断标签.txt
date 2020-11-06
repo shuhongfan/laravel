@@ -1,0 +1,82 @@
+﻿@foreach标签
+
+	public function view1(){
+		$date = date('Y-m-d',time());
+		$day = '日';
+		$city = 'Wuhan';
+		$province = 'Hubei';
+		$location = array('city','province');
+		$time = strtotime('+1 year');
+		$a = compact('date','day','time',$location);
+		return view('view1',['a'=>$a]);
+	}
+
+<body>
+@foreach($a as $key=>$value)
+    {{$value}}  <br />
+@endforeach
+</body>
+
+---------------------
+	public function view3(){
+		$data = DB::table('member')->get();
+		return view('view3',compact('data'));
+	}
+@foreach($data as $key=>$value)
+   {{$key}} {{$value->id}} &emsp;  &emsp;{{$value->age}} &copy <br />
+@endforeach
+
+-------------------------
+
+
+======================================
+if 标签
+@if ()
+
+    @elseif()
+
+    @elseif()
+
+    @else
+
+@endif
+
+	public function view3(){
+//		$data = DB::table('member')->get();
+//		return view('view3',compact('data'));
+		$day = date('N');   //星期几 ，数字
+		return view('view3',compact('day'));
+	}
+
+<body>
+<hr />
+今天是星期
+@if ($day == '1')
+    一
+@elseif($day == '2')
+    二
+@elseif($day == '3')
+    三
+@elseif($day == '4')
+    四
+@elseif($day == '5')
+    五
+@elseif($day == '6')
+    六
+@else
+    日
+@endif
+</body>
+===================
+
+
+
+
+
+
+
+
+
+
+
+

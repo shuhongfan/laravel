@@ -1,0 +1,35 @@
+﻿1.控制器是什么？
+   Controller,是类，用于实现一定的功能，控制器中存放中一些方法，实现一定的功能，通过路由调用控制器，不再使用回调函数。
+
+2.控制器写在哪里？
+   App/Http/Controllers放置控制器
+   Controller.php是父类文件，别的控制器可以继承
+
+3.控制器文件如何命名？
+   大驼峰的控制器名+Controller.php
+   例如AddDataController.php   LoginController.php
+
+4.控制器结构怎么写？
+   通过artisan命令自动生成，例如：确保在当前项目的根目录，命令行输入：
+   php artisan make:controller TestController
+   结构代码自动完成，
+   namespace App\Http\Controller;
+   use Illuminate\Http\Request;    
+   class TestController extends  Controller{
+     //
+   }
+
+5.路由怎么写？
+   匿名函数不再使用回调函数，将匿名函数换成:控制器类名@方法名 
+   例如 测试控制器路由：
+   Route::get('URL','控制器@方法');
+   Route::get('/test1','TestController@test1');注意大小写
+  
+   控制器代码：
+   namespace App\Http\Controller;
+   use Illuminate\Http\Request;    
+   class TestController extends  Controller{
+      public function test1(){
+        return phpinfo();
+      }
+   }

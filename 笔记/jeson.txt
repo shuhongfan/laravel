@@ -1,0 +1,17 @@
+﻿    public function Arr($obj)
+    {
+        return json_decode(json_encode($obj), true);
+    }
+
+    public function show()
+    {
+        $infoObj = User::find(1/*字段id*/)->Userinfo()->get();
+        $infoArr = $this->Arr($infoObj);
+        var_dump($infoArr);
+    }
+}
+
+https://www.runoob.com/php/php-json.html
+
+
+https://www.cnblogs.com/cxx8181602/p/9984573.html

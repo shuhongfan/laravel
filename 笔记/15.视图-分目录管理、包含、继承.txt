@@ -1,0 +1,67 @@
+﻿1、视图分目录管理
+      例如：resource/view/home/view1.blade.php
+      return view('home.view1');
+
+2、视图的包含：
+       @include('目录.视图')    非常简单
+
+3、视图的继承：一般用于做公共部分的部分。使用@extends('目录.视图')格式
+      例如：  @extends('home.view1')
+      继承（@extends）
+            母模板中使用@yield('section名称')
+            子模板中使用:
+            @section('section名称')
+                内容
+            @endsection('section名称')
+
+======================
+例如 laview2.com项目：
+视图代码：
+Route::get('/', function () {
+    return view('welcome');
+});
+Route::get('/test1', function () {
+    return view('home/view1');
+    //return view('home.view1');
+});
+Route::get('/test2', function () {
+    return view('view2');
+});
+Route::get('/test3', function () {
+    return view('view3');
+});
+-----------------------------
+parent.blade.php代码：
+<h1>这是头部</h1>
+@yield('main')
+<h1>这是尾部</h1>
+@yield('main2')
+-----------------------------
+home/view1.blade.php代码：
+<html5>
+    <body>
+     你在他乡还好吗？
+    </body>
+</html5>
+-----------------------------
+view2.blade.php代码
+<html5>
+    <body>
+     @include('home.view1')
+     我在武汉很好的！
+    </body>
+</html5>
+-----------------------------
+view3.blade.php代码：
+@section('main2')
+    <div>
+        来自世界各地的朋友将欢聚武汉！
+    </div>
+@endsection
+@section('main')
+    <div>
+        第七届世界军运会将于2019年10月18日在美丽的江城举行！
+    </div>
+@endsection
+@extends('parent')
+======================

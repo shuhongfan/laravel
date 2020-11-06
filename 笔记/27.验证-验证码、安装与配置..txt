@@ -1,0 +1,23 @@
+﻿captcha：CAPTCHA项目是Completely Automated Public Turing Test to Tell Computers and Humans Apart (全自动区分计算机和人类的图灵测试)的简称，卡内基梅隆大学试图将其注册为商标，但2008年请求被驳回。 CAPTCHA的目的是区分计算机和人类的一种程序算法，是一种区分用户是计算机和人的计算程序，这种程序必须能生成并评价人类能很容易通过但计算机却通不过的测试。
+
+
+1. https://packagist.org，搜索captcha，选择mews/capthca,打开这个页面，执行:
+composer require  mews/captcha
+注意点：打开 GD2，在php.ini中；其他几个依赖已经配置好了。
+
+2.配置config/app.php文件，找到providers添加
+  Mews\Captcha\CaptchaServiceProvider::class,
+  查找aliaes   key中添加：
+  'Captcha'=>Mews\Captcha\Facades\Captcha::class,
+
+3.配置，如果需要定义自己的配置。则需要发布一个配置，执行命令：
+php artisan vendor:publish
+生成的配置文件在config/captcha.php
+
+4.captcha安装成功。
+
+
+
+
+
+

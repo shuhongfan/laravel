@@ -1,0 +1,23 @@
+﻿<?php
+$dbms='mysql';     
+$host='localhost'; 
+$dbName='db_info';    
+$user='root';      
+$pass='root';          
+$dsn="$dbms:host=$host;dbname=$dbName";
+$dbh = new PDO($dsn, $user, $pass); 
+foreach ($dbh->query('SELECT * from tb_user') as $row) {
+  echo $row['id'].'--'.$row['user'].'--'.$row['pwd'].'--'.$row['subject']."<br/>";
+}
+?>
+====================================
+<?php
+$user='root';      
+$pass='root';          
+$dsn="mysql:host=localhost;dbname=db_info";
+$dbh = new PDO($dsn, $user, $pass); 
+foreach ($dbh->query('SELECT * from tb_user') as $row) {
+  echo $row['id'].'--'.$row['user'].'--'.$row['pwd'].'--'.$row['subject']."<br/>";
+}
+?>
+====================================

@@ -1,0 +1,107 @@
+﻿1.新建数据库和数据表
+
+2.配置数据库
+   配置根目录下 .env
+   DB_CONNECTION = mysql
+   DB_HOST=127.0.0.1 最好用 localhost  可以查看 mysql数据库 user表
+   DB_PORT=3306
+   DB_DATABASE=db_chengji
+   DB_USERNAME=root
+   DB_PASSWORD=root
+
+  config下面有database.php配置
+
+3.引入DB门面
+   use DB;  可以使用 config中配置好了
+
+4.定义路由4个 赠删改查
+   /home/add
+   /home/del
+   /home/update
+   /home/select
+Route::group(['prefix'=>'home'],function(){
+   Route::get('add','TestController@add');
+   Route::get('del','TestController@del');  
+   Route::get('update','TestController@update');
+   Route::get('select','TestController@select');
+});
+
+5.增加记录 insert  添加记录不要id
+   $db = DB::table('member');  //无前缀表名,可以不赋值给变量$db
+   $rst1 = $db->insert(
+    [
+      'name' =>'zhsangsan',
+      ‘age'    =>20,
+      ’sex‘    =>'male',
+    ]
+   );
+   dd($rst1);  //看看返回结果
+
+   $rst2 = $db->insert([
+      ['name' =>'zhsangsan',
+      ‘age'    =>20,
+      ’sex‘    =>'male',
+      ],
+      ['name' =>'lisi',
+      ‘age'    =>19,
+      ’sex‘    =>'male',
+      ],
+      ['name' =>'wangwu',
+      ‘age'    =>21,
+      ’sex‘    =>'female',
+      ],
+     ]);
+     dd($rst2);  //看看返回结果
+
+6.插入一条记录 insertGetId([一维数组]);
+   $id = insertGetId(['name'=>'马冬梅','age'=>18,'sex'='mail']);
+
+7.修改记录
+   $db = DB::table('member');
+   $rst = $db->where('id','=','1')->update(['name'=>'zhnagsanfeng']);
+   dd($rst);  
+   =可以不写
+   update()里面保存着要修改的键值对
+   受到影响的行数，0并不表示失败
+
+   多个   where(字段,运算符,值)       且的关系
+   多个   orWhere(字段,运算符,值)   或的关系
+
+   $db = DB::table('member');
+   $rst = $db->where('id','=','1')->increment('age',2); //age增加2
+   dd($rst);
+
+  $rst = $db->where('id','=','1')->increment('age');//加1
+  $rst = $db->where('id','=','1')->decrement('age');//减1
+  $rst = $db->where('id','=','1')->decrement('age',4);//减4
+
+8.查询 
+   get取出基本数据
+   $db = DB:table('member');
+   $rst = $db->get();  //每个元素不是数组 是对象
+   dd($rst);
+   
+   foreach($rst as $key=>$value){
+      echo {$value->id};   //不能 $value['id'],要加{}
+      echo {$value->name};
+      ...
+   }
+
+   $rst = $db->where('id','>','4')->get();  //每个元素不是数组 是对象
+
+   多个   where(字段,运算符,值)       且的关系
+   多个   orWhere(字段,运算符,值)   或的关系  
+
+9.
+
+
+
+
+
+
+
+
+
+
+
+

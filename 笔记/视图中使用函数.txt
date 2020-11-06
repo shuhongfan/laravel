@@ -1,0 +1,17 @@
+﻿	public function view1(){
+		$date = date('Y-m-d',time());
+		$day = '日';
+		$city = 'Wuhan';
+		$province = 'Hubei';
+		$location = array('city','province');
+		$time = strtotime('+1 year');
+		return view('view1',compact('date','day','time',$location));
+	}
+
+{{$day}}<br />
+{{$date}}
+{{$city}}
+{{$province}}
+{{date('Y-m-d:H:i:s',$time)}}
+函数与PHP相同，只要在左右加括号即可
+==========================

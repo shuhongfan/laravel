@@ -1,0 +1,31 @@
+﻿修改数据，先找到那个记录，再修改
+如：
+$user =Member::find($id);
+$user->name = 'zhangsan';
+$user->save();
+如：
+	public function update1(){
+		$data = Member::find('3');
+		$data->name = 'zzzz';
+		$data->save();
+		dd($data);
+	}
+可以使用update
+	public function update1(){
+		$model = new Member();
+		$ss = $model->where('id','>','1')->update(['age'=>'10','email'=>'123@123.com']);
+		dd($ss);
+	}
+删除记录
+	public function del1(){
+		$model = new Member();
+		$ss = $model->find('3');
+		$reslut = $ss->delete();
+		dd($reslut);
+	}
+	public function del1(){
+		$model = new Member();
+		$ss = $model->where('id','>','11');
+		$reslut = $ss->delete();
+		dd($reslut);
+	}

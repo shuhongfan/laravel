@@ -1,0 +1,120 @@
+﻿laravel自带的Eloquent ORM提供了一个美观的、简单的与数据库打交道的AcetiveRecord实现。每张数据表都对应一个与该表进行交互的“Model模型”。模型允许你在表中进行数据查询、以及插入删除更新操作。
+AR模式三个核心
+每个数据表        与数据表进行交互的Model模型映射（实例化模型）
+记录中的字段     与模型类的属性映射（给属性赋值）
+表中的记录         与一个完整的请求实例映射（具体的CURD操作）
+
+1、定义模型
+定义模型的位置，默认在 app目录下面，但是为了管理方便，建议分目录进行创建
+分目录管理，例如 admin和 home
+2、命名规则
+Member.php User.php Goods.php  即,表名.php 首字母大写
+3、创建模型
+可以使用artisan命令：
+php artisan make:model Member
+
+cd D:\phpStudy\PHPTutorial\WWW\laravel58
+
+=================================
+使用模型来对数据进行增删改查
+启动phpstudy2018,将laravel5.4负责粘贴到E盘根目录
+1、新建模型
+ e:
+ e:\cd laravel54
+ e:\php artisan make:controller ManagerController
+
+2、配置数据库
+  .env下配置
+DB_CONNECTION=mysql
+DB_HOST=127.0.0.1
+DB_PORT=3306
+DB_DATABASE=qz04
+DB_USERNAME=root
+DB_PASSWORD=root
+
+3、新建模型：
+ e:
+ e:\cd laravel54
+ e:\php artisan make:model Member
+
+4、编程序：
+<?php
+
+namespace App;
+
+use Illuminate\Database\Eloquent\Model;
+
+class Member extends Model
+{
+    //定义表名
+    protected $table = 'member';
+    //定义主键
+    protected $primaryKey = 'id';
+    //定义可以写入的字段
+    protected $fillable = ['id','name','age','email'];
+    //定义禁止时间操作
+    public $timestamps = false;
+
+}
+
+5、
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

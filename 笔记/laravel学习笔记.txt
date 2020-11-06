@@ -1,0 +1,380 @@
+﻿E:\BaiduNetdiskDownload\laravel学习视频\day1
+laravel安装包位置
+http://laravelacademy.org/resources-download
+https://www.sixstaredu.com/laravel/index.html?refere=laravel#down
+https://www.sixstaredu.com/laravel/index.html?refere=laravel#down
+
+https://www.laravel.com
+http://laravelacademy.org
+http://www.golaravel.com
+https://laravelacademy.org/post/9862.html  
+https://learnku.com/laravel/docs
+---------------------------------
+d:/phpstudy/phptutorial/www/app/http/route.php
+Route::get('/testop/{n?}', function ($n) {
+    $flag = 1;
+	for($i=2;$i<$n;$i++)
+	   if ($n % $i == 0)
+	      {$flag = 0;
+		  break;
+		  }
+	return "这里是带可选参数的路由".$flag;
+});
+运行：
+http://localhost/laravel/public/index.php/testop/3
+显示：这里是带参数的路由1
+http://localhost/laravel/public/index.php/testop/32
+显示：这里是带可选参数的路由0
+上面的程序判断一个数是否为素数
+--------------------------------------
+Route::get('user3/{id}/{name?}', function ($id,$name) {
+    return $id.'=>'.$name;
+	
+})->where(['id'=>'[0-9]+','name'=>'[A-Za-z]+']);
+运行：
+http://localhost/laravel/public/index.php/user3/12/liubei
+显示：
+12=>liubei
+---------------------------------------
+Route::get('user2/{name?}', function ($name=null) {
+    return $name;
+})->where('name','[A-Za-z]+');
+运行：
+http://localhost/laravel/public/index.php/user2/zhangsan
+显示：
+zhangsan
+运行：
+http://localhost/laravel/public/index.php/user2
+显示
+显示为空，因为默认值为null
+？表示可选参数，使用默认值
+-----------------------------------
+Route::get('user2/{name?}', function ($name='lisi') {
+    return $name;
+})->where('name','[A-Za-z]+');
+运行：
+http://localhost/laravel/public/index.php/user2
+显示：
+lisi
+运行：
+http://localhost/laravel/public/index.php/user2/wangwang
+显示：
+wangwang
+默认值不起作用。'lisi'是默认值
+--------------------------------
+Route::get('user/{id}', function ($id) {
+    return $id;
+});
+
+运行：
+http://localhost/laravel/public/index.php/user/23
+显示：23
+----------------------------------
+Route::any('mutly1', function () {
+    return 'mutly1';
+});
+运行：
+http://localhost/laravel/public/index.php/mutly1
+显示：
+'mutly1
+运行：
+http://localhost/laravel/public/index.php/mutly1/44
+显示：会出错
+--------------------------
+Route::match(['get','post'],'mutly', function () {
+    return 'mutly';
+});
+运行：
+http://localhost/laravel/public/index.php/mutly
+显示：
+mutly
+---------------------------
+Route::get('basic', function () {
+    return 'basic';
+});
+运行：
+http://localhost/laravel/public/basic
+显示：basic
+------------------------------
+1.编写控制器
+<?php
+namespace App\Http\Controllers;
+class TestController extends \App\Http\Controllers\Controller
+{
+     public function lst(){ 
+         return 'zheli shi test kongzhiqi de list fangfa!';
+     }
+}
+编写路由：
+web.php
+Route::get('/test/fn','TestController@lst' ); 
+运行：
+http://localhost/laravel54/public/test/fn
+显示：
+zheli shi test kongzhiqi de list fangfa!
+-----------------------------------
+2.编写控制器
+新建文件夹Test
+即：D:\phpStudy\PHPTutorial\WWW\laravel54\app\Http\Controllers\Test
+在该文件夹下新建控制器：UserController.php
+内容：
+<?php
+namespace App\Http\Controllers\Test;
+use Illuminate\Http\Request;
+use App\Http\Controllers\Controller;
+class UserController extends  Controller  //无需再写成\App\Http\Controllers\Controller
+{
+	public function lst(){ 		 
+		return '1111';
+	}
+}
+编写路由：
+Route::get('/user/lst','Test\UserController@lst' ); 
+运行：
+http://localhost/laravel54/public/user/lst
+显示：
+1111
+------------------------------------------
+视图：
+文件名为：
+D:\phpStudy\PHPTutorial\WWW\laravel54\resources\views\welcome.blade.php
+D:\phpStudy\PHPTutorial\WWW\laravel54\resources\views\welcome2.blade.php
+文件内容省略
+控制器代码：
+<?php
+namespace App\Http\Controllers;
+use App\Http\Controllers\Controller;      //加use之后，无需。 
+class TestController extends  Controller  //无需再写成\App\Http\Controllers\Controller
+{
+	public function lst(){ 		 
+		//return 'zheli shi test kongzhiqi de list fangfa!';
+		return view('welcome2');
+	}
+}
+路由代码：
+Route::get('/test/fn/{fn}','TestController@lst' ); 
+运行：
+http://localhost/laravel54/public/test/fn/1234
+显示有完美效果：
+Laravel等等
+---------------------------------------------
+中间件
+win+r  cmd
+C:\Users\Administrator>d:
+D:\>cd phpstudy
+D:\phpStudy>cd D:\phpStudy\PHPTutorial
+D:\phpStudy\PHPTutorial>cd www
+D:\phpStudy\PHPTutorial\WWW>cd laravel54
+D:\phpStudy\PHPTutorial\WWW\laravel54>php artisan make:middleware TestMiddleware
+Middleware created successfully.
+D:\phpStudy\PHPTutorial\WWW\laravel54>
+则自动生成中间件文件：D:\phpStudy\PHPTutorial\WWW\laravel54\app\Http\Middleware.php
+里面的文件：
+<?php
+namespace App\Http\Middleware;
+use Closure;
+class TestMiddleware
+{
+    /**
+     * Handle an incoming request.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  \Closure  $next
+     * @return mixed
+     */
+    public function handle($request, Closure $next)
+    {
+        return $next($request);
+    }
+}
+可以改写：
+<?php
+namespace App\Http\Middleware;
+use Closure;
+class TestMiddleware
+{
+    /**
+     * Handle an incoming request.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  \Closure  $next
+     * @return mixed
+     */
+    public function handle($request, Closure $next)
+    {
+        if (!session('uid')){
+			return redirect('/login');
+		}
+		return $next($request);
+    }
+}
+
+中间件的注册：
+Kernel.php全局中间件$middleware，对所有http请求都会生效
+自定义中间件：$routeMiddleware 对指定的路由生效的中间件
+在自定义中间件中添加代码：
+'login' => \App\Http\Middleware\TestMiddleware::class,
+此时中间件注册好了
+
+写两个路由：
+Route::get('/login',function(){
+    session(['uid'=>'100']);
+	return "zheshi login yemian...";
+});
+
+Route::get('/setting',function(){
+	return 'zheli shi setting luyou...uid='.session('uid');
+})->middleware('login');
+调用了中间件，不加和加->middleware('login')，看看效果是否相同。
+
+第一次输入网址：
+http://localhost/laravel54/public/setting
+显示
+自动跳到http://localhost/laravel54/public/login
+显示为：
+zheshi login yemian...
+
+第二次运行
+http://localhost/laravel54/public/setting
+zheli shi setting luyou...uid=100
+发现uid=100
+说明执行了中间件
+
+-------------------------------
+依赖注入
+什么是依赖，如果A类的实现需要B类的支持，就叫做A类依赖于B类
+
+注入：
+在类的构造方法里面传入另一个类的对象作为参数
+
+什么是容器，包括两个方法，一个是绑定bind，一个是生产make
+http请求，依赖注入
+1.编写一个路由:
+Route::get('/user/add','Test\UserController@add');
+
+2.在UserController中写add方法：
+public function add(Request $request){
+    dd($request);   //dd   var_dump 和 die。调试命令
+}
+
+3.运行：http://localhost/laravel54/public/user/add
+则显示：
+Request {#38 ▼
+  #json: null
+  #convertedFiles: null
+  #userResolver: Closure {#138 ▶}
+  #routeResolver: Closure {#139 ▶}
+  +attributes: ParameterBag {#40 ▶}
+  +request: ParameterBag {#46 ▶}
+  +query: ParameterBag {#46 ▶}
+  +server: ServerBag {#42 ▶}
+  +files: FileBag {#43 ▶}
+  +cookies: ParameterBag {#41 ▶}
+  +headers: HeaderBag {#44 ▶}
+  #content: null
+  #languages: null
+  #charsets: null
+  #encodings: null
+  #acceptableContentTypes: null
+  #pathInfo: "/user/add"
+  #requestUri: "/laravel54/public/user/add"
+  #baseUrl: "/laravel54/public"
+  #basePath: null
+  #method: "GET"
+  #format: null
+  #session: Store {#177 ▶}
+  #locale: null
+  #defaultLocale: "en"
+}
+这些就是得到的$request
+网址继续变化：http://localhost/laravel54/public/user/add?name=xiaoming&age=16
+则显示：
+Request {#38 ▼
+  #json: null
+  #convertedFiles: null
+  #userResolver: Closure {#138 ▶}
+  #routeResolver: Closure {#139 ▶}
+  +attributes: ParameterBag {#40 ▶}
+  +request: ParameterBag {#46 ▼
+    #parameters: array:2 [▼
+      "name" => "xiaoming"
+      "age" => "16"
+    ]
+  }
+  +query: ParameterBag {#46 ▶}
+  +server: ServerBag {#42 ▶}
+  +files: FileBag {#43 ▶}
+  +cookies: ParameterBag {#41 ▶}
+  +headers: HeaderBag {#44 ▶}
+  #content: null
+  #languages: null
+  #charsets: null
+  #encodings: null
+  #acceptableContentTypes: null
+  #pathInfo: "/user/add"
+  #requestUri: "/laravel54/public/user/add?name=xiaoming&age=16"
+  #baseUrl: "/laravel54/public"
+  #basePath: null
+  #method: "GET"
+  #format: null
+  #session: Store {#177 ▶}
+  #locale: null
+  #defaultLocale: "en"
+}
+可以看到name和age
+{}:表示对象
+[]:表示数组
+
+三个方法 all()方法，可以得到所有的输入值
+input()可以得到具体的某一输入的值
+method()方法：得到是哪种请求 get(网址)， post(表单)
+
+$input = $request->all();
+代码：
+	public function add(Request $request){
+    	    //dd($request);   //dd   var_dump 和 die。调试命令
+	    dd($request->all());
+	}
+
+现在通过网址获得输入：
+执行：http://localhost/laravel54/public/user/add?name=xiaoming&age=16
+显示：
+array:2 [▼
+  "name" => "xiaoming"
+  "age" => "16"
+]
+
+获得单个的值：
+	public function add(Request $request){
+    	//dd($request);   //dd   var_dump 和 die。调试命令
+	    //dd($request->all());
+	    dd($request->input('name'));
+	}
+运行：http://localhost/laravel54/public/user/add?name=xiaoming&age=16
+显示：
+"xiaoming"
+
+input还可获得数组，获得默认值
+------------------------------------
+默认值：$request->input('name','zhangsan')
+网址中没有name，则默认值为'zhangsan'
+	public function add(Request $request){
+    	//dd($request);   //dd   var_dump 和 die。调试命令
+	    //dd($request->all());
+	    dd($request->input('name','zhangsan'));
+	}
+
+获得数组值：
+$request->input('producs.0.name');
+$request->input('producs.*.name');
+----------------------
+ 判断是什么方法
+is_method()方法
+if ($request->isMethod('get')){
+  //显示视图
+  //return '这里是get请求';
+  return view('lst');  //在lst中添加表单
+}elseif ($request->isMethod('post')){
+  //数据处理
+  
+}

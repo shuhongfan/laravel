@@ -1,0 +1,26 @@
+﻿
+6.控制器目录管理？
+   例如新建目录 Admin 和 Home 分别表示前后台
+   这两个目录中分别放置一些控制器。
+   php artisan make:controller Admin/IndexController
+   php artisan make:controller Home/IndexController
+   在Admin和Home中自动创建IndexController
+
+    路由写法：
+    Route::get('/test2','Admin\IndexController@index');注意大小写
+    Route::get('/Admin/test2','Admin\IndexController@index');注意大小写
+    正反斜杆
+
+    分目录管理，方便管理
+
+7.路由群组，控制器分目录
+Route::group(['prefix'=>'Admin'],function(){
+    Route::get('/test3','Admin\TestController@test3');
+
+    Route::get('/test4','Admin\TestController@test4');
+});
+Route::group(['prefix'=>'Home'],function(){
+    Route::get('/test5','Home\TestController@test5');
+
+    Route::get('/test6','Home\TestController@test6');
+});
